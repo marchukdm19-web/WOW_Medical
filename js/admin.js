@@ -194,23 +194,35 @@ function renderJournal() {
 
 function exportJournalToExcel() {
   if (currentExaminations.length === 0) { showStatus('❌ Немає записів для експорту', 'error'); return; }
-  const exportData = currentExaminations.map((exam) => ({
-    '№': null,
-    'Дата / Час': exam.timestamp || '',
-    'Медпункт': exam.medicalStation === 'black' ? 'Чорний' : 'Білий',
-    'ПІБ дитини': exam.childName || '',
-    'Температура (°C)': exam.temperature || '',
-    'Скарги': exam.complaints || '',
-    'Надана допомога': exam.actionsDone || '',
-    'Призначення': exam.prescriptions || '',
-    'Лікар': exam.doctorName || '',
-    'Повідомлено батьків': exam.parentsNotified ? 'Так' : 'Ні'
-  }));
-  exportData.forEach((row, i) => row['№'] = i + 1);
-  const ws = XLSX.utils.json_to_sheet(exportData);
-  ws['!cols'] = [{ wch: 4 }, { wch: 22 }, { wch: 14 }, { wch: 30 }, { wch: 14 }, { wch: 40 }, { wch: 40 }, { wch: 40 }, { wch: 25 }, { wch: 16 }];
+
+  const colWidths = [{ wch: 4 }, { wch: 22 }, { wch: 14 }, { wch: 30 }, { wch: 14 }, { wch: 40 }, { wch: 40 }, { wch: 40 }, { wch: 25 }, { wch: 16 }];
+
+  function buildSheet(records, stationLabel) {
+    const data = records.map((exam) => ({
+      '№': null,
+      'Дата / Час': exam.timestamp || '',
+      'Медпункт': stationLabel,
+      'ПІБ дитини': exam.childName || '',
+      'Температура (°C)': exam.temperature || '',
+      'Скарги': exam.complaints || '',
+      'Надана допомога': exam.actionsDone || '',
+      'Призначення': exam.prescriptions || '',
+      'Лікар': exam.doctorName || '',
+      'Повідомлено батьків': exam.parentsNotified ? 'Так' : 'Ні'
+    }));
+    data.forEach((row, i) => row['№'] = i + 1);
+    const ws = XLSX.utils.json_to_sheet(data);
+    ws['!cols'] = colWidths;
+    return ws;
+  }
+
+  const whiteRecords = currentExaminations.filter((e) => e.medicalStation !== 'black');
+  const blackRecords = currentExaminations.filter((e) => e.medicalStation === 'black');
+
   const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, 'Журнал оглядів');
+  XLSX.utils.book_append_sheet(wb, buildSheet(whiteRecords, 'Білий'), 'Білий медпункт');
+  XLSX.utils.book_append_sheet(wb, buildSheet(blackRecords, 'Чорний'), 'Чорний медпункт');
+
   const now = new Date();
   const fileName = `WOW_Medical_Журнал_${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}.xlsx`;
   XLSX.writeFile(wb, fileName);

@@ -35,6 +35,7 @@ export async function saveVisit(data) {
       prescriptions: data.prescriptions || '',
       parentsNotified: !!data.parentsNotified,
       doctorName: data.doctorName || '',
+      medicalStation: data.medicalStation || 'white',
       createdAt: serverTimestamp()
     };
 
@@ -78,6 +79,7 @@ export async function getExaminations() {
         prescriptions: data.prescriptions || '',
         parentsNotified: data.parentsNotified || false,
         doctorName: data.doctorName || '',
+        medicalStation: data.medicalStation || 'white',
         timestamp: timestamp,
         createdAt: data.createdAt || null
       });
