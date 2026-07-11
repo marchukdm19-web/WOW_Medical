@@ -76,9 +76,9 @@ let currentChildren = [];
    ======================================== */
 
 async function initApp() {
-  await refreshData();
-
+  // Реєструємо обробники подій ДО завантаження даних
   fileInput.addEventListener('change', handleFileSelect);
+  console.log('[Admin] Обробник зміни файлу зареєстровано');
 
   dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('import-box__dropzone--dragover'); });
   dropzone.addEventListener('dragleave', () => dropzone.classList.remove('import-box__dropzone--dragover'));
@@ -104,6 +104,9 @@ async function initApp() {
     tab.classList.add('journal-tab--active');
     renderJournal();
   });
+
+  // Тепер завантажуємо дані
+  await refreshData();
 }
 
 /* ========================================
