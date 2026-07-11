@@ -114,6 +114,11 @@ async function initApp() {
 async function loadJournal() {
   try {
     currentExaminations = await getExaminations();
+
+    // Fallback: для старих записів без medicalStation вважаємо 'white'
+    currentExaminations.forEach(function(exam) {
+      if (!exam.medicalStation) exam.medicalStation = 'white';
+    });
   } catch {
     currentExaminations = [];
   }
