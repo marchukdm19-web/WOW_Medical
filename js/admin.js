@@ -387,18 +387,13 @@ function resetImport() {
 }
 
 /* ========================================
-   Старт: перевіряємо авторизацію
+   Старт: завжди показуємо форму входу
    ======================================== */
 
-if (checkAuth()) {
-  hideLogin();
-  initApp();
-} else {
-  showLogin();
-  loginBtn.addEventListener('click', handleLogin);
-  adminPassword.addEventListener('keydown', (e) => { if (e.key === 'Enter') handleLogin(); });
-  // Ховаємо весь контент, доки не залогінені
-  document.querySelector('.header').style.display = 'none';
-  document.querySelector('.main').style.display = 'none';
-  document.querySelector('.footer').style.display = 'none';
-}
+showLogin();
+loginBtn.addEventListener('click', handleLogin);
+adminPassword.addEventListener('keydown', (e) => { if (e.key === 'Enter') handleLogin(); });
+// Ховаємо весь контент, доки не залогінені
+document.querySelector('.header').style.display = 'none';
+document.querySelector('.main').style.display = 'none';
+document.querySelector('.footer').style.display = 'none';
