@@ -54,7 +54,7 @@ export async function saveVisit(data) {
 export async function getExaminations() {
   try {
     const colRef = collection(db, COLLECTION);
-    const q = query(colRef, orderBy('createdAt', 'desc'));
+    const q = query(colRef);
     const snapshot = await getDocs(q);
 
     const records = [];
