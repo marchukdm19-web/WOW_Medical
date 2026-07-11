@@ -13,18 +13,33 @@ import {
   deleteDoc,
   doc,
   writeBatch,
-  where
+  serverTimestamp
 } from 'https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js';
 
 const COLLECTION = 'medical_records';
 
 /**
  * Зберігає медичний запис у Firestore.
+ * Поля: childId, childName, complaints, temperature,
+ *        actionsDone, prescriptions, parentsNotified,
+ *        doctorName, createdAt (serverTimestamp)
  */
 export async function saveVisit(data) {
   try {
-    await addDoc(collection(db, COLLECTION), data);
-    console.log('[API] Медичний запис збережено у Firestore:', data.fullName);
+    const payload = {
+      childId: data.childId || null,
+      childName: data.childName || '',
+      complaints: data.complaints || '',
+      temperature: data.temperature || '',
+      actionsDone: data.actionsDone || '',
+      prescriptions: data.prescriptions || '',
+      parentsNotified: !!data.parentsNotified,
+      doctorName: data.doctorName || '',
+      createdAt: serverTimestamp()
+    };
+
+    await addDoc(collection(db, COLLECTION), payload);
+    console.log('[API] Медичний запис збережено у Firestore:', data.childName);
     return { success: true, message: 'Дані збережено у Firebase.' };
   } catch (error) {
     console.error('[API] Помилка збереження:', error);
@@ -33,24 +48,39 @@ export async function saveVisit(data) {
 }
 
 /**
- * Завантажує всі медичні записи (від найновіших).
+ * Завантажує всі медичні записи (сортовані за createdAt DESC).
  */
 export async function getExaminations() {
   try {
     const colRef = collection(db, COLLECTION);
-    const q = query(colRef);
+    const q = query(colRef, orderBy('createdAt', 'desc'));
     const snapshot = await getDocs(q);
 
     const records = [];
     snapshot.forEach((document) => {
-      records.push({ id: document.id, ...document.data() });
-    });
-
-    // Сортуємо клієнтськи — від найновіших
-    records.sort((a, b) => {
-      if (!a.timestamp) return 1;
-      if (!b.timestamp) return -1;
-      return b.timestamp.localeCompare(a.timestamp);
+      const data = document.data();
+      // Форматуємо createdAt для відображення
+      let timestamp = '';
+      if (data.createdAt && data.createdAt.toDate) {
+        const d = data.createdAt.toDate();
+        timestamp = d.toLocaleString('uk-UA', {
+          year: 'numeric', month: '2-digit', day: '2-digit',
+          hour: '2-digit', minute: '2-digit', second: '2-digit'
+        });
+      }
+      records.push({
+        id: document.id,
+        childId: data.childId || null,
+        childName: data.childName || '',
+        complaints: data.complaints || '',
+        temperature: data.temperature || '',
+        actionsDone: data.actionsDone || '',
+        prescriptions: data.prescriptions || '',
+        parentsNotified: data.parentsNotified || false,
+        doctorName: data.doctorName || '',
+        timestamp: timestamp,
+        createdAt: data.createdAt || null
+      });
     });
 
     console.log(`[API] Firestore: завантажено ${records.length} медичних записів`);

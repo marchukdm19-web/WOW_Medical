@@ -137,13 +137,12 @@ function renderJournal() {
     return `<tr>
       <td>${i + 1}</td>
       <td>${esc(exam.timestamp || '—')}</td>
-      <td><strong>${esc(exam.fullName || '—')}</strong></td>
-      <td>${esc(exam.age || '—')}</td>
-      <td>${esc(exam.teamLeader || '—')}</td>
+      <td><strong>${esc(exam.childName || '—')}</strong></td>
       <td>${exam.temperature ? esc(exam.temperature) + '°C' : '—'}</td>
       <td class="data-table__cell--wrap">${esc(exam.complaints || '—')}</td>
-      <td class="data-table__cell--wrap">${esc(exam.assistance || '—')}</td>
+      <td class="data-table__cell--wrap">${esc(exam.actionsDone || '—')}</td>
       <td class="data-table__cell--wrap">${esc(exam.prescriptions || '—')}</td>
+      <td>${esc(exam.doctorName || '—')}</td>
       <td><span class="data-table__mp-badge ${mpClass}">${mpLabel}</span></td>
       <td>${exam.parentsNotified ? '<span class="data-table__badge data-table__badge--yes">Так</span>' : '<span class="data-table__badge data-table__badge--no">Ні</span>'}</td>
     </tr>`;

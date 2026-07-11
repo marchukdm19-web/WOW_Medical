@@ -28,9 +28,10 @@ const fieldParentName = document.getElementById('parentName');
 const fieldPhone = document.getElementById('phone');
 const fieldHealthInfo = document.getElementById('healthInfo');
 
+const fieldDoctorName = document.getElementById('doctorName');
 const fieldTemperature = document.getElementById('temperature');
 const fieldComplaints = document.getElementById('complaints');
-const fieldAssistance = document.getElementById('assistance');
+const fieldActionsDone = document.getElementById('actionsDone');
 const fieldPrescriptions = document.getElementById('prescriptions');
 const fieldParentsNotified = document.getElementById('parentsNotified');
 
@@ -52,7 +53,7 @@ async function initChildren() {
   } catch (error) {
     console.error('[App] Помилка завантаження дітей:', error);
     childrenData = [];
-    showToast('Помилка завантаження бази дітей. Перевірте підключення.', 'error');
+    showToast('Помилка завантаження бази. Перевірте підключення.', 'error');
   }
   updateTotal();
 }
@@ -134,29 +135,35 @@ function clearResults() {
 
 async function selectChild(child) {
   selectedChild = child;
+
+  // Заповнюємо поля: ПІБ, Вік, Тім-лідер, ПІБ батьків, Телефон, Медичні особливості
   fieldFullName.value = child.fullName || '';
   fieldAge.value = child.age || '';
   fieldTeamLeader.value = child.teamLeader || '';
   fieldParentName.value = child.parentName || '';
   fieldPhone.value = child.phone || '';
   fieldHealthInfo.value = child.healthInfo || '';
+
   searchInput.value = child.fullName;
   clearResults();
   showToast(`Обрано: ${child.fullName}`, 'success');
+
+  // Показати історію звернень цієї дитини (з Firestore)
   await showChildHistory(child.fullName);
+
   fieldTemperature.focus();
 }
 
 /* ========================================
-   Історія звернень (з Firestore)
+   Історія звернень (з Firestore, createdAt DESC)
    ======================================== */
 
 async function showChildHistory(fullName) {
   try {
     const allRecords = await getExaminations();
-    const childHistory = allRecords
-      .filter((exam) => exam.fullName && normalize(exam.fullName) === normalize(fullName))
-      .reverse();
+    const childHistory = allRecords.filter((exam) =>
+      exam.childName && normalize(exam.childName) === normalize(fullName)
+    );
 
     historyCount.textContent = childHistory.length;
 
@@ -175,7 +182,7 @@ async function showChildHistory(fullName) {
         <td><span class="data-table__mp-badge ${mpClass}">${mpLabel}</span></td>
         <td>${exam.temperature ? escapeHTML(exam.temperature) + '°C' : '—'}</td>
         <td class="data-table__cell--wrap">${escapeHTML(exam.complaints || '—')}</td>
-        <td class="data-table__cell--wrap">${escapeHTML(exam.assistance || '—')}</td>
+        <td class="data-table__cell--wrap">${escapeHTML(exam.actionsDone || '—')}</td>
         <td class="data-table__cell--wrap">${escapeHTML(exam.prescriptions || '—')}</td>
         <td>${exam.parentsNotified ? '<span class="data-table__badge data-table__badge--yes">Так</span>' : '<span class="data-table__badge data-table__badge--no">Ні</span>'}</td>
       </tr>`;
@@ -210,35 +217,25 @@ function debounceSearch() {
 }
 
 /* ========================================
-   Форма
+   Форма → Збереження в medical_records
    ======================================== */
 
 function collectFormData() {
-  const now = new Date();
-  const timestamp = now.toLocaleString('uk-UA', {
-    year: 'numeric', month: '2-digit', day: '2-digit',
-    hour: '2-digit', minute: '2-digit', second: '2-digit'
-  });
-
   return {
-    fullName: fieldFullName.value.trim(),
-    age: fieldAge.value.trim(),
-    teamLeader: fieldTeamLeader.value.trim(),
-    parentName: fieldParentName.value.trim(),
-    phone: fieldPhone.value.trim(),
-    healthInfo: fieldHealthInfo.value.trim(),
-    medicalPoint: selectedMedicalPoint,
-    temperature: fieldTemperature.value.trim(),
+    childId: selectedChild ? (selectedChild.id || null) : null,
+    childName: fieldFullName.value.trim(),
     complaints: fieldComplaints.value.trim(),
-    assistance: fieldAssistance.value.trim(),
+    temperature: fieldTemperature.value.trim(),
+    actionsDone: fieldActionsDone.value.trim(),
     prescriptions: fieldPrescriptions.value.trim(),
     parentsNotified: fieldParentsNotified.checked,
-    timestamp
+    doctorName: fieldDoctorName.value.trim(),
+    medicalPoint: selectedMedicalPoint
   };
 }
 
 function validateForm(data) {
-  if (!data.fullName) {
+  if (!data.childName) {
     showToast('Оберіть дитину через пошук', 'error');
     searchInput.focus();
     return false;
@@ -275,9 +272,10 @@ function resetForm() {
   fieldParentName.value = '';
   fieldPhone.value = '';
   fieldHealthInfo.value = '';
+  fieldDoctorName.value = '';
   fieldTemperature.value = '';
   fieldComplaints.value = '';
-  fieldAssistance.value = '';
+  fieldActionsDone.value = '';
   fieldPrescriptions.value = '';
   fieldParentsNotified.checked = false;
   setMedicalPoint('white');
