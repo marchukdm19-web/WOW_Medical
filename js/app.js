@@ -175,8 +175,8 @@ async function showChildHistory(fullName) {
     historySection.style.display = 'block';
 
     historyBody.innerHTML = childHistory.map((exam) => {
-      const mpLabel = exam.medicalPoint === 'black' ? 'Чорний' : 'Білий';
-      const mpClass = exam.medicalPoint === 'black' ? 'data-table__mp-badge--black' : 'data-table__mp-badge--white';
+      const mpLabel = exam.medicalStation === 'black' ? 'Чорний' : 'Білий';
+      const mpClass = exam.medicalStation === 'black' ? 'data-table__mp-badge--black' : 'data-table__mp-badge--white';
       return `<tr>
         <td>${escapeHTML(exam.timestamp || '—')}</td>
         <td><span class="data-table__mp-badge ${mpClass}">${mpLabel}</span></td>
@@ -230,7 +230,7 @@ function collectFormData() {
     prescriptions: fieldPrescriptions.value.trim(),
     parentsNotified: fieldParentsNotified.checked,
     doctorName: fieldDoctorName.value.trim(),
-    medicalPoint: selectedMedicalPoint
+    medicalStation: selectedMedicalPoint
   };
 }
 

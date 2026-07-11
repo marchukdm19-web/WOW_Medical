@@ -1,5 +1,6 @@
 /* ============================================
    WOW Medical — Admin (ES Module)
+   Захист: sessionStorage (пароль WOW1)
    Імпорт Excel → Firestore
    База дітей + Журнал оглядів
    ============================================ */
@@ -8,8 +9,44 @@ import { saveChildren, loadChildren, deleteChildren } from './database.js';
 import { getExaminations, clearExaminations } from './api.js';
 
 const IMPORT_DATE_KEY = 'lastImportDate';
+const AUTH_KEY = 'wow_admin_authenticated';
 
-// DOM
+// === Login ===
+const loginOverlay = document.getElementById('loginOverlay');
+const adminPassword = document.getElementById('adminPassword');
+const loginBtn = document.getElementById('loginBtn');
+const loginError = document.getElementById('loginError');
+
+function checkAuth() {
+  return sessionStorage.getItem(AUTH_KEY) === 'true';
+}
+
+function showLogin() {
+  loginOverlay.classList.remove('login-overlay--hidden');
+  adminPassword.focus();
+}
+
+function hideLogin() {
+  loginOverlay.classList.add('login-overlay--hidden');
+  document.querySelector('.header').style.display = '';
+  document.querySelector('.main').style.display = '';
+  document.querySelector('.footer').style.display = '';
+  sessionStorage.setItem(AUTH_KEY, 'true');
+}
+
+function handleLogin() {
+  if (adminPassword.value === 'WOW1') {
+    hideLogin();
+    loginError.textContent = '';
+    initApp();
+  } else {
+    loginError.textContent = 'Невірний пароль';
+    adminPassword.value = '';
+    adminPassword.focus();
+  }
+}
+
+// === DOM (admin) ===
 const fileInput = document.getElementById('fileInput');
 const dropzone = document.getElementById('dropzone');
 const fileNameEl = document.getElementById('fileName');
@@ -36,10 +73,10 @@ let pendingData = null;
 let currentChildren = [];
 
 /* ========================================
-   Ініціалізація
+   Ініціалізація (після входу)
    ======================================== */
 
-async function init() {
+async function initApp() {
   await refreshData();
 
   fileInput.addEventListener('change', handleFileSelect);
@@ -86,7 +123,7 @@ async function loadJournal() {
 
 function getFilteredExaminations() {
   if (journalFilter === 'all') return currentExaminations;
-  return currentExaminations.filter((exam) => exam.medicalPoint === journalFilter);
+  return currentExaminations.filter((exam) => exam.medicalStation === journalFilter);
 }
 
 function updateJournalStats() {
@@ -95,6 +132,7 @@ function updateJournalStats() {
   const todayMonth = now.getMonth() + 1;
   const todayYear = now.getFullYear();
   let todayCount = 0, feverCount = 0;
+  let whiteCount = 0, blackCount = 0;
 
   currentExaminations.forEach((exam) => {
     if (exam.timestamp) {
@@ -103,10 +141,15 @@ function updateJournalStats() {
     }
     const temp = parseFloat(exam.temperature);
     if (!isNaN(temp) && temp >= 37) feverCount++;
+    if (exam.medicalStation === 'white') whiteCount++;
+    else if (exam.medicalStation === 'black') blackCount++;
   });
 
   journalToday.textContent = todayCount;
   journalFever.textContent = feverCount;
+  document.getElementById('journalTotal').textContent = currentExaminations.length;
+  document.getElementById('journalWhite').textContent = whiteCount;
+  document.getElementById('journalBlack').textContent = blackCount;
 }
 
 function parseTimestamp(ts) {
@@ -127,13 +170,13 @@ function renderJournal() {
 
   if (filtered.length === 0) {
     const msg = currentExaminations.length === 0 ? 'Немає записів.' : 'Немає записів для обраного медпункту.';
-    journalBody.innerHTML = `<tr><td colspan="11" class="data-table__empty">${msg}</td></tr>`;
+    journalBody.innerHTML = `<tr><td colspan="10" class="data-table__empty">${msg}</td></tr>`;
     return;
   }
 
   journalBody.innerHTML = filtered.map((exam, i) => {
-    const mpLabel = exam.medicalPoint === 'black' ? 'Чорний' : 'Білий';
-    const mpClass = exam.medicalPoint === 'black' ? 'data-table__mp-badge--black' : 'data-table__mp-badge--white';
+    const msLabel = exam.medicalStation === 'black' ? 'Чорний' : 'Білий';
+    const msClass = exam.medicalStation === 'black' ? 'data-table__mp-badge--black' : 'data-table__mp-badge--white';
     return `<tr>
       <td>${i + 1}</td>
       <td>${esc(exam.timestamp || '—')}</td>
@@ -143,7 +186,7 @@ function renderJournal() {
       <td class="data-table__cell--wrap">${esc(exam.actionsDone || '—')}</td>
       <td class="data-table__cell--wrap">${esc(exam.prescriptions || '—')}</td>
       <td>${esc(exam.doctorName || '—')}</td>
-      <td><span class="data-table__mp-badge ${mpClass}">${mpLabel}</span></td>
+      <td><span class="data-table__mp-badge ${msClass}">${msLabel}</span></td>
       <td>${exam.parentsNotified ? '<span class="data-table__badge data-table__badge--yes">Так</span>' : '<span class="data-table__badge data-table__badge--no">Ні</span>'}</td>
     </tr>`;
   }).join('');
@@ -151,29 +194,23 @@ function renderJournal() {
 
 function exportJournalToExcel() {
   if (currentExaminations.length === 0) { showStatus('❌ Немає записів для експорту', 'error'); return; }
-
   const exportData = currentExaminations.map((exam) => ({
     '№': null,
     'Дата / Час': exam.timestamp || '',
-    'Медпункт': exam.medicalPoint === 'black' ? 'Чорний' : 'Білий',
-    'ПІБ дитини': exam.fullName || '',
-    'Вік': exam.age || '',
-    'Тім-лідер': exam.teamLeader || '',
-    'Телефон батьків': exam.phone || '',
+    'Медпункт': exam.medicalStation === 'black' ? 'Чорний' : 'Білий',
+    'ПІБ дитини': exam.childName || '',
     'Температура (°C)': exam.temperature || '',
     'Скарги': exam.complaints || '',
-    'Надана допомога': exam.assistance || '',
+    'Надана допомога': exam.actionsDone || '',
     'Призначення': exam.prescriptions || '',
-    'Повідомлено батьків': exam.parentsNotified ? 'Так' : 'Ні',
-    'Стан здоров\'я': exam.healthInfo || ''
+    'Лікар': exam.doctorName || '',
+    'Повідомлено батьків': exam.parentsNotified ? 'Так' : 'Ні'
   }));
   exportData.forEach((row, i) => row['№'] = i + 1);
-
   const ws = XLSX.utils.json_to_sheet(exportData);
-  ws['!cols'] = [{ wch: 4 }, { wch: 22 }, { wch: 14 }, { wch: 30 }, { wch: 5 }, { wch: 25 }, { wch: 16 }, { wch: 14 }, { wch: 40 }, { wch: 40 }, { wch: 40 }, { wch: 16 }, { wch: 25 }];
+  ws['!cols'] = [{ wch: 4 }, { wch: 22 }, { wch: 14 }, { wch: 30 }, { wch: 14 }, { wch: 40 }, { wch: 40 }, { wch: 40 }, { wch: 25 }, { wch: 16 }];
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, 'Журнал оглядів');
-
   const now = new Date();
   const fileName = `WOW_Medical_Журнал_${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}.xlsx`;
   XLSX.writeFile(wb, fileName);
@@ -183,7 +220,6 @@ function exportJournalToExcel() {
 async function handleClearJournal() {
   if (currentExaminations.length === 0) { showStatus('🗑️ Журнал порожній', 'info'); return; }
   if (!confirm(`Видалити всі ${currentExaminations.length} записів?`)) return;
-
   showLoading(true);
   try {
     await clearExaminations();
@@ -191,11 +227,8 @@ async function handleClearJournal() {
     renderJournal();
     updateJournalStats();
     showStatus('🗑️ Журнал очищено', 'info');
-  } catch (e) {
-    showStatus('❌ Помилка: ' + e.message, 'error');
-  } finally {
-    showLoading(false);
-  }
+  } catch (e) { showStatus('❌ Помилка: ' + e.message, 'error'); }
+  finally { showLoading(false); }
 }
 
 /* ========================================
@@ -203,11 +236,7 @@ async function handleClearJournal() {
    ======================================== */
 
 async function refreshData() {
-  try {
-    currentChildren = await loadChildren();
-  } catch {
-    currentChildren = [];
-  }
+  try { currentChildren = await loadChildren(); } catch { currentChildren = []; }
   await loadJournal();
   updateUI();
 }
@@ -223,7 +252,6 @@ function handleFileSelect(event) { const file = event.target.files[0]; if (file)
 function processFile(file) {
   const ext = '.' + file.name.split('.').pop().toLowerCase();
   if (!['.xlsx', '.xls', '.csv'].includes(ext)) { showStatus('❌ Непідтримуваний формат', 'error'); return; }
-
   const reader = new FileReader();
   reader.onload = (e) => {
     try {
@@ -231,12 +259,10 @@ function processFile(file) {
       const ws = wb.Sheets[wb.SheetNames[0]];
       const rawData = XLSX.utils.sheet_to_json(ws, { header: 1 });
       if (rawData.length < 2) { showStatus('❌ Файл порожній', 'error'); return; }
-
       const headers = rawData[0].map((h) => String(h || '').trim());
       const rows = rawData.slice(1).filter((row) => row.some((cell) => cell !== undefined && cell !== null && String(cell).trim() !== ''));
       const map = findColumns(headers);
       if (!map) { showStatus('❌ Колонки не знайдено', 'error'); return; }
-
       const now = Date.now();
       pendingData = rows.map((row, i) => ({
         id: now + i,
@@ -247,16 +273,12 @@ function processFile(file) {
         phone: String(row[map.phone] !== undefined && row[map.phone] !== null ? row[map.phone] : '').trim(),
         healthInfo: String(row[map.healthInfo] !== undefined && row[map.healthInfo] !== null ? row[map.healthInfo] : '').trim()
       })).filter((c) => c.fullName !== '');
-
       if (pendingData.length === 0) { showStatus('❌ Порожні дані', 'error'); pendingData = null; return; }
-
       fileNameEl.textContent = file.name;
       dropzone.classList.add('import-box__dropzone--has-file');
       importBtn.disabled = false;
       showStatus(`📄 Знайдено ${pendingData.length} дітей`, 'success');
-    } catch (err) {
-      showStatus('❌ Помилка читання файлу', 'error');
-    }
+    } catch (err) { showStatus('❌ Помилка читання файлу', 'error'); }
   };
   reader.readAsArrayBuffer(file);
 }
@@ -267,8 +289,7 @@ function findColumns(headers) {
   const fi = idx(['піб', 'прізвище', 'ім\'я', 'фио', 'full name', 'name']);
   if (fi === -1) return null;
   return {
-    fullName: fi,
-    age: idx(['вік', 'возраст', 'age']),
+    fullName: fi, age: idx(['вік', 'возраст', 'age']),
     teamLeader: idx(['тім-лідер', 'тім лідер', 'team leader']),
     parentName: idx(['піб батьків', 'батьків', 'parent']),
     phone: idx(['телефон', 'phone', 'тел']),
@@ -277,47 +298,35 @@ function findColumns(headers) {
 }
 
 /* ========================================
-   Імпорт
+   Імпорт / Очищення
    ======================================== */
 
 async function handleImport() {
   if (!pendingData?.length) { showStatus('❌ Немає даних', 'error'); return; }
   if (currentChildren.length > 0 && !confirm(`У базі ${currentChildren.length} дітей. Замінити?`)) { showStatus('⚠️ Скасовано', 'info'); return; }
-
-  showLoading(true);
-  importBtn.disabled = true;
-  showStatus('⏳ Зберігаємо...', 'info');
-
+  showLoading(true); importBtn.disabled = true; showStatus('⏳ Зберігаємо...', 'info');
   try {
     await saveChildren(pendingData);
-    localStorage.setItem(IMPORT_DATE_KEY, new Date().toLocaleString('uk-UA'));
+    sessionStorage.setItem(IMPORT_DATE_KEY, new Date().toLocaleString('uk-UA'));
     await refreshData();
     resetImport();
     showStatus(`✅ Імпортовано ${pendingData.length} дітей`, 'success');
-  } catch (e) {
-    showStatus('❌ Помилка: ' + e.message, 'error');
-  } finally {
-    showLoading(false);
-  }
+  } catch (e) { showStatus('❌ Помилка: ' + e.message, 'error'); }
+  finally { showLoading(false); }
 }
 
 async function handleClear() {
   if (currentChildren.length === 0) { showStatus('🗑️ База порожня', 'info'); return; }
   if (!confirm(`Видалити всі ${currentChildren.length} записів?`)) return;
-
   showLoading(true);
   try {
     await deleteChildren();
     currentChildren = [];
-    localStorage.removeItem(IMPORT_DATE_KEY);
-    updateUI();
-    resetImport();
+    sessionStorage.removeItem(IMPORT_DATE_KEY);
+    updateUI(); resetImport();
     showStatus('🗑️ Базу очищено', 'info');
-  } catch (e) {
-    showStatus('❌ Помилка: ' + e.message, 'error');
-  } finally {
-    showLoading(false);
-  }
+  } catch (e) { showStatus('❌ Помилка: ' + e.message, 'error'); }
+  finally { showLoading(false); }
 }
 
 /* ========================================
@@ -326,15 +335,12 @@ async function handleClear() {
 
 function updateStats() {
   totalChildren.textContent = currentChildren.length;
-  lastImport.textContent = localStorage.getItem(IMPORT_DATE_KEY) || '—';
+  lastImport.textContent = sessionStorage.getItem(IMPORT_DATE_KEY) || '—';
 }
 
 function renderTable() {
   tableCount.textContent = currentChildren.length + ' запис' + plural(currentChildren.length);
-  if (currentChildren.length === 0) {
-    tableBody.innerHTML = '<tr><td colspan="7" class="data-table__empty">Немає даних</td></tr>';
-    return;
-  }
+  if (currentChildren.length === 0) { tableBody.innerHTML = '<tr><td colspan="7" class="data-table__empty">Немає даних</td></tr>'; return; }
   tableBody.innerHTML = currentChildren.map((c, i) => `<tr>
     <td>${i + 1}</td><td><strong>${esc(c.fullName)}</strong></td>
     <td>${esc(c.age) || '—'}</td><td>${esc(c.teamLeader) || '—'}</td>
@@ -360,8 +366,7 @@ function showLoading(s) { if (loadingOverlay) loadingOverlay.style.display = s ?
 
 function esc(str) {
   if (str === undefined || str === null) return '—';
-  const d = document.createElement('div');
-  d.appendChild(document.createTextNode(String(str)));
+  const d = document.createElement('div'); d.appendChild(document.createTextNode(String(str)));
   return d.innerHTML;
 }
 
@@ -377,11 +382,23 @@ function showStatus(msg, type) {
 }
 
 function resetImport() {
-  pendingData = null;
-  fileInput.value = '';
-  fileNameEl.textContent = '';
-  dropzone.classList.remove('import-box__dropzone--has-file');
-  importBtn.disabled = true;
+  pendingData = null; fileInput.value = ''; fileNameEl.textContent = '';
+  dropzone.classList.remove('import-box__dropzone--has-file'); importBtn.disabled = true;
 }
 
-init();
+/* ========================================
+   Старт: перевіряємо авторизацію
+   ======================================== */
+
+if (checkAuth()) {
+  hideLogin();
+  initApp();
+} else {
+  showLogin();
+  loginBtn.addEventListener('click', handleLogin);
+  adminPassword.addEventListener('keydown', (e) => { if (e.key === 'Enter') handleLogin(); });
+  // Ховаємо весь контент, доки не залогінені
+  document.querySelector('.header').style.display = 'none';
+  document.querySelector('.main').style.display = 'none';
+  document.querySelector('.footer').style.display = 'none';
+}

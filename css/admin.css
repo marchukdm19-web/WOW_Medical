@@ -405,6 +405,63 @@
   color: #7F8C8D;
 }
 
+/* === Login === */
+
+.login-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(240, 244, 248, 0.95);
+  backdrop-filter: blur(8px);
+}
+
+.login-overlay--hidden {
+  display: none;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  background: #fff;
+  border-radius: var(--radius-xl);
+  padding: 40px 36px;
+  box-shadow: 0 8px 32px var(--color-shadow-lg);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.login-card__logo {
+  margin-bottom: 8px;
+}
+
+.login-card__logo svg {
+  filter: drop-shadow(0 4px 8px rgba(74, 144, 217, 0.25));
+}
+
+.login-card__title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--color-text);
+}
+
+.login-card__subtitle {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.login-card__error {
+  min-height: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-accent);
+}
+
 /* ============================================
    Responsive
    ============================================ */
