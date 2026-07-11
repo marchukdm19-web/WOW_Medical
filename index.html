@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WOW Medical — Медичний кабінет</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="header">
+    <div class="container">
+      <div class="header__inner">
+        <div class="logo">
+          <div class="logo__icon">
+            <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="60" height="60" rx="16" fill="url(#logoGrad)"/>
+              <path d="M30 12C21.72 12 15 18.72 15 27v6c0 2.76 2.24 5 5 5h2v-8h-4v-3c0-6.63 5.37-12 12-12s12 5.37 12 12v3h-4v8h2c2.76 0 5-2.24 5-5v-6c0-8.28-6.72-15-15-15z" fill="#fff"/>
+              <path d="M27 35h6v6h-6z" fill="#fff"/>
+              <circle cx="30" cy="27" r="3" fill="#fff"/>
+              <defs>
+                <linearGradient id="logoGrad" x1="0" y1="0" x2="60" y2="60">
+                  <stop stop-color="#4A90D9"/>
+                  <stop offset="1" stop-color="#357ABD"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <div class="logo__text">
+            <span class="logo__brand">WOW</span>
+            <span class="logo__sub">Medical</span>
+          </div>
+        </div>
+        <div class="header__right">
+          <a href="admin.html" class="nav-link">Admin</a>
+          <span class="badge">Медичний кабінет</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container">
+
+      <section class="hero">
+        <h1 class="hero__title">Медичний кабінет</h1>
+        <p class="hero__subtitle">Швидкий пошук, оперативний огляд, турбота про кожного</p>
+      </section>
+
+      <!-- Пошук дитини -->
+      <section class="search-section">
+        <div class="card card--search">
+          <div class="card__header">
+            <svg class="card__header-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/>
+              <path d="M21 21l-4.35-4.35"/>
+            </svg>
+            <h2 class="card__title">Пошук дитини</h2>
+            <span class="card__count" id="searchTotal">0</span>
+          </div>
+          <div class="card__body">
+            <div class="search-box">
+              <div class="search-input-wrapper">
+                <input
+                  type="text"
+                  id="searchInput"
+                  class="input input--search"
+                  placeholder="Введіть ім'я, прізвище або тім-лідера..."
+                  autocomplete="off"
+                >
+                <svg class="search-input-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"/>
+                  <path d="M21 21l-4.35-4.35"/>
+                </svg>
+              </div>
+              <button id="searchBtn" class="btn btn--primary btn--search">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"/>
+                  <path d="M21 21l-4.35-4.35"/>
+                </svg>
+                Знайти
+              </button>
+            </div>
+            <div id="searchResults" class="search-results"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Форма огляду -->
+      <section class="form-section">
+        <div class="card card--form">
+          <div class="card__header">
+            <svg class="card__header-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/>
+              <rect x="9" y="3" width="6" height="4" rx="1"/>
+            </svg>
+            <h2 class="card__title">Форма огляду</h2>
+          </div>
+          <div class="card__body">
+            <form id="examinationForm" class="form" novalidate>
+
+              <!-- Дані дитини (автозаповнюються з пошуку, лише для перегляду) -->
+              <div class="form__section-label">Дані дитини</div>
+              <div class="form__grid">
+                <div class="form__group form__group--full">
+                  <label for="fullName" class="form__label">ПІБ дитини</label>
+                  <input type="text" id="fullName" class="input input--readonly" placeholder="—" readonly>
+                </div>
+                <div class="form__group">
+                  <label for="age" class="form__label">Вік</label>
+                  <input type="text" id="age" class="input input--readonly" placeholder="—" readonly>
+                </div>
+                <div class="form__group">
+                  <label for="teamLeader" class="form__label">Тім-лідер</label>
+                  <input type="text" id="teamLeader" class="input input--readonly" placeholder="—" readonly>
+                </div>
+                <div class="form__group">
+                  <label for="parentName" class="form__label">ПІБ батьків</label>
+                  <input type="text" id="parentName" class="input input--readonly" placeholder="—" readonly>
+                </div>
+                <div class="form__group">
+                  <label for="phone" class="form__label">Телефон батьків</label>
+                  <input type="text" id="phone" class="input input--readonly" placeholder="—" readonly>
+                </div>
+                <div class="form__group">
+                  <label for="healthInfo" class="form__label">Стан здоров'я</label>
+                  <input type="text" id="healthInfo" class="input input--readonly" placeholder="—" readonly>
+                </div>
+              </div>
+
+              <!-- Вибір медпункту -->
+              <div class="form__section-label">Медпункт</div>
+              <div class="medical-point-selector">
+                <button type="button" id="mpWhite" class="mp-btn mp-btn--white mp-btn--active">
+                  <span class="mp-btn__dot"></span>
+                  Білий медпункт
+                </button>
+                <button type="button" id="mpBlack" class="mp-btn mp-btn--black">
+                  <span class="mp-btn__dot"></span>
+                  Чорний медпункт
+                </button>
+              </div>
+
+              <!-- Медичний огляд -->
+              <div class="form__section-label">Медичний огляд</div>
+              <div class="form__grid">
+                <div class="form__group">
+                  <label for="temperature" class="form__label">Температура (°C)</label>
+                  <input type="number" id="temperature" class="input" placeholder="36.6" step="0.1" min="34" max="43">
+                </div>
+                <div class="form__group form__group--full">
+                  <label for="complaints" class="form__label">Скарги</label>
+                  <textarea id="complaints" class="input input--textarea" rows="3" placeholder="Опишіть скарги дитини..."></textarea>
+                </div>
+                <div class="form__group form__group--full">
+                  <label for="assistance" class="form__label">Надана допомога</label>
+                  <textarea id="assistance" class="input input--textarea" rows="3" placeholder="Опишіть надану допомогу..."></textarea>
+                </div>
+                <div class="form__group form__group--full">
+                  <label for="prescriptions" class="form__label">Призначення</label>
+                  <textarea id="prescriptions" class="input input--textarea" rows="3" placeholder="Вкажіть призначення..."></textarea>
+                </div>
+              </div>
+
+              <div class="form__actions">
+                <label class="checkbox">
+                  <input type="checkbox" id="parentsNotified">
+                  <span class="checkbox__mark"></span>
+                  <span class="checkbox__text">Повідомлено батьків</span>
+                </label>
+                <button type="submit" class="btn btn--primary btn--save">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/>
+                    <polyline points="17 21 17 13 7 13 7 21"/>
+                    <polyline points="7 3 7 8 15 8"/>
+                  </svg>
+                  Зберегти
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- Історія звернень -->
+      <section class="history-section" id="historySection" style="display:none;">
+        <div class="card card--history">
+          <div class="card__header">
+            <svg class="card__header-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+            <h2 class="card__title">Історія звернень</h2>
+            <span class="card__count" id="historyCount">0</span>
+          </div>
+          <div class="card__body card__body--no-padding">
+            <div class="table-wrapper">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Дата / Час</th>
+                    <th>Медпункт</th>
+                    <th>t°C</th>
+                    <th>Скарги</th>
+                    <th>Допомога</th>
+                    <th>Призначення</th>
+                    <th>Батьки</th>
+                  </tr>
+                </thead>
+                <tbody id="historyBody">
+                  <tr>
+                    <td colspan="7" class="data-table__empty">Немає попередніх звернень</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p class="footer__text">&copy; 2026 WOW Medical. Усі права захищено. | <a href="admin.html" class="nav-link">Admin</a></p>
+    </div>
+  </footer>
+
+  <script src="js/config.js?v=2"></script>
+  <script src="js/api.js?v=2"></script>
+  <script src="js/children-data.js?v=2"></script>
+  <script src="js/app.js?v=2"></script>
+</body>
+</html>

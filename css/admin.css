@@ -1,0 +1,455 @@
+/* ============================================
+   WOW Medical — Admin Styles
+   ============================================ */
+
+/* === Navigation === */
+.header__nav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.nav-link {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+.nav-link:hover {
+  color: var(--color-primary);
+}
+
+.badge--admin {
+  background: linear-gradient(135deg, #E74C3C, #C0392B);
+}
+
+/* === Danger Button === */
+.btn--danger {
+  background: linear-gradient(135deg, #E74C3C, #C0392B);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(231, 76, 60, 0.35);
+}
+
+.btn--danger:hover {
+  box-shadow: 0 6px 20px rgba(231, 76, 60, 0.5);
+  transform: translateY(-1px);
+}
+
+.btn--danger:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
+}
+
+/* === Stats Grid === */
+.stats-section {
+  margin-bottom: 28px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.stats-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: var(--color-surface);
+  border-radius: var(--radius-xl);
+  padding: 28px 28px;
+  box-shadow: 0 2px 12px var(--color-shadow);
+  transition: box-shadow var(--transition);
+}
+
+.stats-card:hover {
+  box-shadow: 0 8px 32px var(--color-shadow-lg);
+}
+
+.stats-card__icon {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, #EEF4FB, #E3F0FC);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.stats-card__icon--accent {
+  background: linear-gradient(135deg, #E8F8F5, #D1F2EB);
+  color: #1ABC9C;
+}
+
+.stats-card__icon--warning {
+  background: linear-gradient(135deg, #FEF9E7, #FDEBD0);
+  color: #F39C12;
+}
+
+.stats-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stats-card__value {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--color-text);
+  line-height: 1;
+}
+
+.stats-card__label {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+/* === Import Box === */
+.import-box {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.import-box__dropzone {
+  position: relative;
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 48px 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: all var(--transition);
+  background: #FAFBFC;
+}
+
+.import-box__dropzone:hover,
+.import-box__dropzone--dragover {
+  border-color: var(--color-primary);
+  background: #EEF4FB;
+}
+
+.import-box__dropzone--has-file {
+  border-color: var(--color-success);
+  border-style: solid;
+  background: #F0FAF4;
+}
+
+.import-box__input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+
+.import-box__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  pointer-events: none;
+}
+
+.import-box__icon {
+  color: var(--color-text-secondary);
+  margin-bottom: 4px;
+}
+
+.import-box__dropzone--has-file .import-box__icon {
+  color: var(--color-success);
+}
+
+.import-box__text {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.import-box__hint {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+}
+
+.import-box__filename {
+  display: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-success);
+  background: rgba(46, 204, 113, 0.1);
+  padding: 6px 14px;
+  border-radius: 100px;
+}
+
+.import-box__dropzone--has-file .import-box__filename {
+  display: inline-block;
+}
+
+.import-box__actions {
+  display: flex;
+  gap: 12px;
+}
+
+.import-box__status {
+  min-height: 24px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.import-box__status--success {
+  color: var(--color-success);
+}
+
+.import-box__status--error {
+  color: var(--color-accent);
+}
+
+/* === Card Count === */
+.card__count {
+  margin-left: auto;
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+  font-weight: 600;
+  background: #EEF2F7;
+  padding: 4px 12px;
+  border-radius: 100px;
+}
+
+/* === Table === */
+.card__body--no-padding {
+  padding: 0;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.data-table thead {
+  background: #F8FAFC;
+  border-bottom: 2px solid var(--color-border);
+}
+
+.data-table th {
+  padding: 14px 18px;
+  text-align: left;
+  font-weight: 700;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.data-table td {
+  padding: 12px 18px;
+  border-bottom: 1px solid #F0F2F5;
+  color: var(--color-text);
+  font-weight: 500;
+}
+
+.data-table tbody tr {
+  transition: background var(--transition);
+}
+
+.data-table tbody tr:hover {
+  background: #FAFBFC;
+}
+
+.data-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.data-table__empty {
+  text-align: center !important;
+  color: var(--color-text-secondary) !important;
+  padding: 48px 18px !important;
+  font-weight: 500 !important;
+  font-size: 0.95rem !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+}
+
+.data-table__health {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 100px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.data-table__health--healthy {
+  background: rgba(46, 204, 113, 0.1);
+  color: #27AE60;
+}
+
+.data-table__health--warning {
+  background: rgba(243, 156, 18, 0.1);
+  color: #E67E22;
+}
+
+.data-table__health--danger {
+  background: rgba(231, 76, 60, 0.1);
+  color: #C0392B;
+}
+
+/* === Loading Overlay === */
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(6px);
+}
+
+.loading-spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid var(--color-border);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-text {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+/* === Journal / Examinations === */
+
+.journal-actions {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 0;
+}
+
+.btn--success {
+  background: linear-gradient(135deg, #27AE60, #2ECC71);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(46, 204, 113, 0.35);
+}
+
+.btn--success:hover {
+  box-shadow: 0 6px 20px rgba(46, 204, 113, 0.5);
+  transform: translateY(-1px);
+}
+
+.btn--success:active {
+  transform: translateY(0);
+}
+
+.btn--outline {
+  background: transparent;
+  border: 2px solid #E74C3C;
+  color: #E74C3C;
+  box-shadow: none;
+}
+
+.btn--outline:hover {
+  background: rgba(231, 76, 60, 0.05);
+  box-shadow: 0 4px 14px rgba(231, 76, 60, 0.2);
+  transform: translateY(-1px);
+}
+
+.data-table td.data-table__cell--wrap {
+  max-width: 200px;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.data-table__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.data-table__badge--yes {
+  background: rgba(46, 204, 113, 0.1);
+  color: #27AE60;
+}
+
+.data-table__badge--no {
+  background: rgba(149, 165, 166, 0.1);
+  color: #7F8C8D;
+}
+
+/* ============================================
+   Responsive
+   ============================================ */
+
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .stats-card {
+    padding: 20px;
+  }
+
+  .header__nav {
+    gap: 10px;
+  }
+
+  .import-box__actions {
+    flex-direction: column;
+  }
+
+  .import-box__actions .btn {
+    width: 100%;
+  }
+
+  .import-box__dropzone {
+    padding: 32px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header__inner {
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px 0 10px;
+  }
+
+  .stats-card__value {
+    font-size: 1.4rem;
+  }
+
+  .data-table th,
+  .data-table td {
+    padding: 10px 12px;
+    font-size: 0.8rem;
+  }
+}

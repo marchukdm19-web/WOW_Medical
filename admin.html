@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WOW Medical Admin — Імпорт бази дітей</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/admin.css">
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+
+  <header class="header">
+    <div class="container">
+      <div class="header__inner">
+        <div class="logo">
+          <div class="logo__icon">
+            <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="60" height="60" rx="16" fill="url(#logoGrad)"/>
+              <path d="M30 12C21.72 12 15 18.72 15 27v6c0 2.76 2.24 5 5 5h2v-8h-4v-3c0-6.63 5.37-12 12-12s12 5.37 12 12v3h-4v8h2c2.76 0 5-2.24 5-5v-6c0-8.28-6.72-15-15-15z" fill="#fff"/>
+              <path d="M27 35h6v6h-6z" fill="#fff"/>
+              <circle cx="30" cy="27" r="3" fill="#fff"/>
+              <defs>
+                <linearGradient id="logoGrad" x1="0" y1="0" x2="60" y2="60">
+                  <stop stop-color="#4A90D9"/>
+                  <stop offset="1" stop-color="#357ABD"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <div class="logo__text">
+            <span class="logo__brand">WOW</span>
+            <span class="logo__sub">Medical</span>
+          </div>
+        </div>
+        <nav class="header__nav">
+          <a href="index.html" class="nav-link">Медичний кабінет</a>
+          <span class="badge badge--admin">Admin Panel</span>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container">
+
+      <section class="hero">
+        <h1 class="hero__title">WOW Medical Admin</h1>
+        <p class="hero__subtitle">Імпорт бази дітей із Excel-файлу</p>
+      </section>
+
+      <!-- Статистика -->
+      <section class="stats-section">
+        <div class="stats-grid">
+          <div class="stats-card">
+            <div class="stats-card__icon">
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4-4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+                <path d="M16 3.13a4 4 0 010 7.75"/>
+              </svg>
+            </div>
+            <div class="stats-card__body">
+              <span class="stats-card__value" id="totalChildren">0</span>
+              <span class="stats-card__label">Всього дітей</span>
+            </div>
+          </div>
+          <div class="stats-card">
+            <div class="stats-card__icon">
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+            </div>
+            <div class="stats-card__body">
+              <span class="stats-card__value" id="lastImport">—</span>
+              <span class="stats-card__label">Останній імпорт</span>
+            </div>
+          </div>
+          <div class="stats-card">
+            <div class="stats-card__icon stats-card__icon--accent">
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+              </svg>
+            </div>
+            <div class="stats-card__body">
+              <span class="stats-card__value" id="journalToday">0</span>
+              <span class="stats-card__label">Звернень сьогодні</span>
+            </div>
+          </div>
+          <div class="stats-card">
+            <div class="stats-card__icon stats-card__icon--warning">
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/>
+              </svg>
+            </div>
+            <div class="stats-card__body">
+              <span class="stats-card__value" id="journalFever">0</span>
+              <span class="stats-card__label">З підвищ. t° (&ge;37°C)</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Імпорт -->
+      <section class="import-section">
+        <div class="card">
+          <div class="card__header">
+            <svg class="card__header-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="12" y1="18" x2="12" y2="12"/>
+              <line x1="9" y1="15" x2="12" y2="12"/>
+              <line x1="15" y1="15" x2="12" y2="12"/>
+            </svg>
+            <h2 class="card__title">Імпорт із Excel</h2>
+          </div>
+          <div class="card__body">
+            <div class="import-box">
+              <div class="import-box__dropzone" id="dropzone">
+                <input
+                  type="file"
+                  id="fileInput"
+                  class="import-box__input"
+                  accept=".xlsx,.xls,.csv"
+                >
+                <div class="import-box__content">
+                  <svg class="import-box__icon" viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                  </svg>
+                  <p class="import-box__text">Перетягніть Excel-файл сюди або натисніть для вибору</p>
+                  <p class="import-box__hint">.xlsx, .xls, .csv</p>
+                  <span class="import-box__filename" id="fileName"></span>
+                </div>
+              </div>
+              <div class="import-box__actions">
+                <button id="importBtn" class="btn btn--primary" disabled>
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                    <polyline points="7 10 12 15 17 10"/>
+                    <line x1="12" y1="15" x2="12" y2="3"/>
+                  </svg>
+                  Імпортувати дітей
+                </button>
+                <button id="clearBtn" class="btn btn--danger">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="3 6 5 6 21 6"/>
+                    <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+                  </svg>
+                  Очистити базу
+                </button>
+              </div>
+              <div id="importStatus" class="import-box__status"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Журнал оглядів -->
+      <section class="table-section">
+        <div class="card">
+          <div class="card__header">
+            <svg class="card__header-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+              <polyline points="10 9 9 9 8 9"/>
+            </svg>
+            <h2 class="card__title">Журнал медичних оглядів</h2>
+            <span class="card__count" id="journalCount">0 записів</span>
+          </div>
+          <div class="card__body">
+            <div class="journal-tabs" id="journalTabs">
+              <button class="journal-tab journal-tab--white journal-tab--active" data-mp="all">Всі</button>
+              <button class="journal-tab journal-tab--white" data-mp="white">Білий медпункт</button>
+              <button class="journal-tab journal-tab--black" data-mp="black">Чорний медпункт</button>
+            </div>
+            <div class="journal-actions">
+              <button id="exportJournalBtn" class="btn btn--success" disabled>
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                  <polyline points="7 10 12 15 17 10"/>
+                  <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                Вивантажити в Excel
+              </button>
+              <button id="clearJournalBtn" class="btn btn--outline" disabled>
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="3 6 5 6 21 6"/>
+                  <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+                </svg>
+                Очистити журнал
+              </button>
+            </div>
+          </div>
+          <div class="card__body card__body--no-padding">
+            <div class="table-wrapper">
+              <table class="data-table" id="journalTable">
+                <thead>
+                  <tr>
+                    <th>№</th>
+                    <th>Дата / Час</th>
+                    <th>ПІБ дитини</th>
+                    <th>Вік</th>
+                    <th>Тім-лідер</th>
+                    <th>t°C</th>
+                    <th>Скарги</th>
+                    <th>Допомога</th>
+                    <th>Призначення</th>
+                    <th>Медпункт</th>
+                    <th>Батьки</th>
+                  </tr>
+                </thead>
+                <tbody id="journalBody">
+                  <tr>
+                    <td colspan="11" class="data-table__empty">
+                      Немає записів. Заповніть форму огляду на головній сторінці.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Таблиця -->
+      <section class="table-section">
+        <div class="card">
+          <div class="card__header">
+            <svg class="card__header-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/>
+              <rect x="9" y="3" width="6" height="4" rx="1"/>
+            </svg>
+            <h2 class="card__title">База дітей</h2>
+            <span class="card__count" id="tableCount">0 записів</span>
+          </div>
+          <div class="card__body card__body--no-padding">
+            <div class="table-wrapper">
+              <table class="data-table" id="childrenTable">
+                <thead>
+                  <tr>
+                    <th>№</th>
+                    <th>ПІБ</th>
+                    <th>Вік</th>
+                    <th>Тім-лідер</th>
+                    <th>ПІБ батьків</th>
+                    <th>Телефон</th>
+                    <th>Стан здоров'я</th>
+                  </tr>
+                </thead>
+                <tbody id="tableBody">
+                  <tr>
+                    <td colspan="7" class="data-table__empty">
+                      Немає даних. Імпортуйте Excel-файл.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p class="footer__text">&copy; 2026 WOW Medical. Усі права захищено. | <a href="index.html">Медичний кабінет</a></p>
+    </div>
+  </footer>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loadingOverlay" style="display:none;">
+    <div class="loading-spinner"></div>
+    <p class="loading-text">Завантаження...</p>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/firebase.js"></script>
+  <script src="js/database.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
