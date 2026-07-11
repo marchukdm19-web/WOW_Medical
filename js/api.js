@@ -1,107 +1,86 @@
 /* ============================================
-   WOW Medical — API
-   Інтеграція з Google Apps Script
+   WOW Medical — API (ES Module)
+   Медичні записи → Firestore "medical_records"
    ============================================ */
 
-/**
- * Відправляє дані огляду на Google Apps Script.
- * Поки що URL не вказано — запит не виконується.
- *
- * @param {Object} data — об'єкт із даними огляду
- * @param {string} data.fullName — ПІБ дитини
- * @param {string} data.squad — загін
- * @param {string} data.room — кімната
- * @param {string} data.birthDate — дата народження
- * @param {number} data.age — вік
- * @param {string} data.teamLeader — тім-лідер
- * @param {string} data.parentPhone — телефон батьків
- * @param {string} data.temperature — температура
- * @param {string} data.complaints — скарги
- * @param {string} data.assistance — надана допомога
- * @param {string} data.prescriptions — призначення
- * @param {boolean} data.parentsNotified — повідомлено батьків
- * @param {string} data.timestamp — дата та час огляду
- * @returns {Promise<Object>} відповідь сервера
- */
-const EXAMINATIONS_KEY = 'examinations';
+import { db } from './firebase.js';
+import {
+  collection,
+  addDoc,
+  getDocs,
+  query,
+  orderBy,
+  deleteDoc,
+  doc,
+  writeBatch,
+  where
+} from 'https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js';
+
+const COLLECTION = 'medical_records';
 
 /**
- * Відправляє дані огляду на Google Apps Script
- * та зберігає в localStorage (журнал оглядів).
- *
- * @param {Object} data — об'єкт із даними огляду
- * @returns {Promise<Object>} відповідь
+ * Зберігає медичний запис у Firestore.
  */
-async function saveVisit(data) {
-  // Завжди зберігаємо в локальний журнал оглядів
-  saveExaminationToJournal(data);
-
-  const url = CONFIG.googleScriptURL;
-
-  if (!url) {
-    console.warn('[WOW Medical API] Google Apps Script URL не вказано.');
-    return {
-      success: true,
-      message: 'Дані збережено локально.'
-    };
-  }
-
+export async function saveVisit(data) {
   try {
-    const response = await fetch(url, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      body: new URLSearchParams(data).toString()
+    await addDoc(collection(db, COLLECTION), data);
+    console.log('[API] Медичний запис збережено у Firestore:', data.fullName);
+    return { success: true, message: 'Дані збережено у Firebase.' };
+  } catch (error) {
+    console.error('[API] Помилка збереження:', error);
+    return { success: false, message: 'Помилка збереження: ' + error.message };
+  }
+}
+
+/**
+ * Завантажує всі медичні записи (від найновіших).
+ */
+export async function getExaminations() {
+  try {
+    const colRef = collection(db, COLLECTION);
+    const q = query(colRef);
+    const snapshot = await getDocs(q);
+
+    const records = [];
+    snapshot.forEach((document) => {
+      records.push({ id: document.id, ...document.data() });
     });
 
-    console.log('[WOW Medical API] Дані успішно відправлено:', data);
-    return {
-      success: true,
-      message: 'Дані успішно відправлено.'
-    };
+    // Сортуємо клієнтськи — від найновіших
+    records.sort((a, b) => {
+      if (!a.timestamp) return 1;
+      if (!b.timestamp) return -1;
+      return b.timestamp.localeCompare(a.timestamp);
+    });
+
+    console.log(`[API] Firestore: завантажено ${records.length} медичних записів`);
+    return records;
   } catch (error) {
-    console.error('[WOW Medical API] Помилка відправки:', error);
-    // Дані вже збережено локально, тому success = true
-    return {
-      success: true,
-      message: 'Дані збережено локально (помилка мережі).'
-    };
-  }
-}
-
-/**
- * Зберігає запис огляду в localStorage.
- */
-function saveExaminationToJournal(data) {
-  try {
-    var raw = localStorage.getItem(EXAMINATIONS_KEY);
-    var examinations = raw ? JSON.parse(raw) : [];
-    examinations.push(data);
-    localStorage.setItem(EXAMINATIONS_KEY, JSON.stringify(examinations));
-    console.log('[WOW Medical API] Запис огляду збережено в журнал. Всього записів: ' + examinations.length);
-  } catch (e) {
-    console.error('[WOW Medical API] Помилка збереження в журнал:', e);
-  }
-}
-
-/**
- * Завантажує всі записи оглядів із localStorage.
- * @returns {Array<Object>}
- */
-function getExaminations() {
-  try {
-    var raw = localStorage.getItem(EXAMINATIONS_KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch (e) {
+    console.error('[API] Помилка завантаження:', error);
     return [];
   }
 }
 
 /**
- * Видаляє всі записи оглядів.
+ * Видаляє всі медичні записи.
  */
-function clearExaminations() {
-  localStorage.removeItem(EXAMINATIONS_KEY);
+export async function clearExaminations() {
+  try {
+    const colRef = collection(db, COLLECTION);
+    const snapshot = await getDocs(query(colRef));
+    const batch = writeBatch(db);
+    let count = 0;
+
+    snapshot.forEach((document) => {
+      batch.delete(doc(db, COLLECTION, document.id));
+      count++;
+    });
+
+    if (count > 0) await batch.commit();
+    console.log(`[API] Firestore: видалено ${count} медичних записів`);
+    return count;
+  } catch (error) {
+    console.error('[API] Помилка очищення:', error);
+    return 0;
+  }
 }

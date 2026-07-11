@@ -1,14 +1,10 @@
 /* ============================================
-   WOW Medical — Config
-   Конфігурація проєкту
+   WOW Medical — Config (ES Module)
    ============================================ */
 
-const CONFIG = {
-  // Google Apps Script URL (буде заповнено пізніше)
+export const CONFIG = {
+  // Google Apps Script URL (опціонально)
   googleScriptURL: '',
-
-  // Ключ localStorage для збереження бази дітей
-  storageKey: 'children',
 
   // Затримка для debounce пошуку (мс)
   searchDebounce: 300,

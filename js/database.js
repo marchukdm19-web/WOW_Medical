@@ -1,144 +1,75 @@
 /* ============================================
-   WOW Medical — Database
-   CRUD для колекції "children"
-   Firebase Firestore (якщо налаштований) або localStorage
-   Працює без ES modules (для file:// протоколу)
+   WOW Medical — Database (ES Module)
+   Firestore CRUD для колекції "children"
    ============================================ */
 
-var Database = (function() {
-  'use strict';
+import { db } from './firebase.js';
+import {
+  collection,
+  getDocs,
+  doc,
+  writeBatch,
+  query,
+  deleteDoc
+} from 'https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js';
 
-  var STORAGE_KEY = 'children';
+const COLLECTION = 'children';
 
-  /**
-   * Зберігає масив дітей.
-   * Firebase (якщо налаштований) → localStorage (завжди).
-   */
-  async function saveChildren(children) {
-    if (!Array.isArray(children)) {
-      throw new Error('saveChildren: очікується масив дітей');
-    }
+/**
+ * Зберігає масив дітей (повна заміна колекції).
+ */
+export async function saveChildren(children) {
+  if (!Array.isArray(children)) throw new Error('saveChildren: очікується масив');
 
-    var db = await Firebase.getDB();
+  const colRef = collection(db, COLLECTION);
+  const snapshot = await getDocs(query(colRef));
+  const batch = writeBatch(db);
 
-    if (db) {
-      try {
-        var firestore = await import('https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js');
-        var colRef = firestore.collection(db, 'children');
-        var snapshot = await firestore.getDocs(firestore.query(colRef));
-        var batch = firestore.writeBatch(db);
+  snapshot.forEach((document) => {
+    batch.delete(doc(db, COLLECTION, document.id));
+  });
 
-        snapshot.forEach(function(document) {
-          batch.delete(firestore.doc(db, 'children', document.id));
-        });
+  children.forEach((child) => {
+    const newDocRef = doc(colRef);
+    batch.set(newDocRef, child);
+  });
 
-        children.forEach(function(child) {
-          var newDocRef = firestore.doc(colRef);
-          batch.set(newDocRef, child);
-        });
+  await batch.commit();
+  console.log(`[Database] Firestore: збережено ${children.length} дітей`);
+  return children.length;
+}
 
-        await batch.commit();
-        console.log('[Database] Збережено ' + children.length + ' дітей у Firestore');
-      } catch (e) {
-        console.warn('[Database] Помилка збереження у Firestore:', e.message);
-      }
-    } else {
-      console.log('[Database] Firebase не налаштований. Зберігаємо в localStorage.');
-    }
+/**
+ * Завантажує всіх дітей із колекції "children".
+ */
+export async function loadChildren() {
+  const colRef = collection(db, COLLECTION);
+  const snapshot = await getDocs(query(colRef));
 
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(children));
-    console.log('[Database] Збережено ' + children.length + ' дітей у localStorage');
-    return children.length;
-  }
+  const children = [];
+  snapshot.forEach((document) => {
+    children.push({ id: document.id, ...document.data() });
+  });
 
-  /**
-   * Завантажує всіх дітей.
-   * Спочатку пробує Firebase, потім localStorage.
-   */
-  async function loadChildren() {
-    var db = await Firebase.getDB();
+  console.log(`[Database] Firestore: завантажено ${children.length} дітей`);
+  return children;
+}
 
-    if (db) {
-      try {
-        var firestore = await import('https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js');
-        var colRef = firestore.collection(db, 'children');
-        var snapshot = await firestore.getDocs(firestore.query(colRef));
-        var children = [];
+/**
+ * Видаляє всіх дітей.
+ */
+export async function deleteChildren() {
+  const colRef = collection(db, COLLECTION);
+  const snapshot = await getDocs(query(colRef));
+  const batch = writeBatch(db);
+  let count = 0;
 
-        snapshot.forEach(function(document) {
-          children.push(Object.assign({ id: document.id }, document.data()));
-        });
+  snapshot.forEach((document) => {
+    batch.delete(doc(db, COLLECTION, document.id));
+    count++;
+  });
 
-        if (children.length > 0) {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(children));
-          console.log('[Database] Завантажено ' + children.length + ' дітей із Firestore та синхронізовано в localStorage');
-          return children;
-        }
-      } catch (e) {
-        console.warn('[Database] Помилка завантаження з Firestore:', e.message);
-      }
-    }
-
-    // Fallback: localStorage
-    try {
-      var raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        var children = JSON.parse(raw);
-        console.log('[Database] Завантажено ' + children.length + ' дітей із localStorage');
-        return children;
-      }
-    } catch (e) {
-      console.error('[Database] Помилка читання localStorage:', e);
-    }
-
-    console.log('[Database] База порожня');
-    return [];
-  }
-
-  /**
-   * Видаляє всіх дітей.
-   */
-  async function deleteChildren() {
-    var db = await Firebase.getDB();
-    var deletedCount = 0;
-
-    if (db) {
-      try {
-        var firestore = await import('https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js');
-        var colRef = firestore.collection(db, 'children');
-        var snapshot = await firestore.getDocs(firestore.query(colRef));
-        var batch = firestore.writeBatch(db);
-
-        snapshot.forEach(function(document) {
-          batch.delete(firestore.doc(db, 'children', document.id));
-          deletedCount++;
-        });
-
-        if (deletedCount > 0) {
-          await batch.commit();
-        }
-        console.log('[Database] Видалено ' + deletedCount + ' дітей із Firestore');
-      } catch (e) {
-        console.warn('[Database] Помилка видалення з Firestore:', e.message);
-      }
-    }
-
-    var localCount = 0;
-    try {
-      var raw = localStorage.getItem(STORAGE_KEY);
-      localCount = raw ? JSON.parse(raw).length : 0;
-    } catch (e) {}
-
-    localStorage.removeItem(STORAGE_KEY);
-    if (deletedCount === 0) deletedCount = localCount;
-    console.log('[Database] Видалено ' + deletedCount + ' дітей із localStorage');
-
-    return deletedCount;
-  }
-
-  return {
-    saveChildren: saveChildren,
-    loadChildren: loadChildren,
-    deleteChildren: deleteChildren
-  };
-})();
+  if (count > 0) await batch.commit();
+  console.log(`[Database] Firestore: видалено ${count} дітей`);
+  return count;
+}

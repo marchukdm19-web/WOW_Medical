@@ -1,54 +1,21 @@
 /* ============================================
-   WOW Medical — Firebase
-   Лінива ініціалізація Firebase Firestore
-   Не падає при порожній конфігурації
-   Працює без ES modules (для file:// протоколу)
+   WOW Medical — Firebase (ES Module)
+   Ініціалізація Firebase Firestore
    ============================================ */
 
-var Firebase = (function() {
-  'use strict';
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js';
+import { getFirestore } from 'https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js';
 
-  var db = null;
-  var app = null;
+const firebaseConfig = {
+  apiKey: "AIzaSyB2vJBHAHGRYXa9ADK7iQjJGaPIyBTnc-s",
+  authDomain: "wow-medical.firebaseapp.com",
+  projectId: "wow-medical",
+  storageBucket: "wow-medical.firebasestorage.app",
+  messagingSenderId: "992690700944",
+  appId: "1:992690700944:web:fdf51e2ea50f0ac5ed8e15"
+};
 
-  var firebaseConfig = {
-    apiKey: '',
-    authDomain: '',
-    projectId: '',
-    storageBucket: '',
-    messagingSenderId: '',
-    appId: ''
-  };
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-  function isFirebaseConfigured() {
-    return !!(
-      firebaseConfig.apiKey &&
-      firebaseConfig.authDomain &&
-      firebaseConfig.projectId
-    );
-  }
-
-  async function getDB() {
-    if (db) return db;
-    if (!isFirebaseConfigured()) {
-      console.warn('[Firebase] Firebase не налаштований. Використовується localStorage.');
-      return null;
-    }
-    try {
-      var firebaseApp = await import('https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js');
-      var firestore = await import('https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js');
-      app = firebaseApp.initializeApp(firebaseConfig);
-      db = firestore.getFirestore(app);
-      console.log('[Firebase] Firebase ініціалізовано успішно');
-      return db;
-    } catch (error) {
-      console.error('[Firebase] Помилка ініціалізації Firebase:', error.message);
-      return null;
-    }
-  }
-
-  return {
-    getDB: getDB,
-    isFirebaseConfigured: isFirebaseConfigured
-  };
-})();
+export { db };
