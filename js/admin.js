@@ -267,18 +267,39 @@ function handleFileSelect(event) { const file = event.target.files[0]; if (file)
 
 function processFile(file) {
   const ext = '.' + file.name.split('.').pop().toLowerCase();
-  if (!['.xlsx', '.xls', '.csv'].includes(ext)) { showStatus('❌ Непідтримуваний формат', 'error'); return; }
+  console.log('[Admin] Отримано файл:', file.name, 'розширення:', ext);
+
+  if (ext !== '.xlsx' && ext !== '.xls' && ext !== '.csv') {
+    showStatus('❌ Непідтримуваний формат. Виберіть .xlsx, .xls або .csv', 'error');
+    return;
+  }
+
   const reader = new FileReader();
   reader.onload = (e) => {
     try {
+      console.log('[Admin] Файл прочитано, парсимо Excel...');
       const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
-      const ws = wb.Sheets[wb.SheetNames[0]];
+      const firstSheet = wb.SheetNames[0];
+      console.log('[Admin] Аркуш:', firstSheet);
+      const ws = wb.Sheets[firstSheet];
       const rawData = XLSX.utils.sheet_to_json(ws, { header: 1 });
-      if (rawData.length < 2) { showStatus('❌ Файл порожній', 'error'); return; }
+      console.log('[Admin] Рядків у файлі:', rawData.length);
+
+      if (rawData.length < 2) { showStatus('❌ Файл порожній або містить лише заголовки', 'error'); return; }
+
       const headers = rawData[0].map((h) => String(h || '').trim());
+      console.log('[Admin] Заголовки:', headers);
       const rows = rawData.slice(1).filter((row) => row.some((cell) => cell !== undefined && cell !== null && String(cell).trim() !== ''));
+      console.log('[Admin] Непорожніх рядків:', rows.length);
+
       const map = findColumns(headers);
-      if (!map) { showStatus('❌ Колонки не знайдено', 'error'); return; }
+      if (!map) {
+        showStatus('❌ Колонки не знайдено. Очікуються: ПІБ, Вік, Тім-лідер, ПІБ батьків, Телефон, Стан здоров\'я', 'error');
+        console.error('[Admin] Заголовки не знайдено:', headers);
+        return;
+      }
+      console.log('[Admin] Знайдено колонки:', map);
+
       const now = Date.now();
       pendingData = rows.map((row, i) => ({
         id: now + i,
@@ -289,13 +310,26 @@ function processFile(file) {
         phone: String(row[map.phone] !== undefined && row[map.phone] !== null ? row[map.phone] : '').trim(),
         healthInfo: String(row[map.healthInfo] !== undefined && row[map.healthInfo] !== null ? row[map.healthInfo] : '').trim()
       })).filter((c) => c.fullName !== '');
-      if (pendingData.length === 0) { showStatus('❌ Порожні дані', 'error'); pendingData = null; return; }
+
+      console.log('[Admin] Розпарсено дітей:', pendingData.length);
+
+      if (pendingData.length === 0) { showStatus('❌ Не знайдено жодного рядка з ПІБ', 'error'); pendingData = null; return; }
+
       fileNameEl.textContent = file.name;
       dropzone.classList.add('import-box__dropzone--has-file');
       importBtn.disabled = false;
-      showStatus(`📄 Знайдено ${pendingData.length} дітей`, 'success');
-    } catch (err) { showStatus('❌ Помилка читання файлу', 'error'); }
+      showStatus(`📄 Знайдено ${pendingData.length} дітей. Натисніть «Імпортувати» для збереження.`, 'success');
+    } catch (err) {
+      console.error('[Admin] Помилка читання Excel:', err);
+      showStatus('❌ Помилка читання файлу. Перевірте формат.', 'error');
+    }
   };
+
+  reader.onerror = (err) => {
+    console.error('[Admin] Помилка FileReader:', err);
+    showStatus('❌ Помилка читання файлу', 'error');
+  };
+
   reader.readAsArrayBuffer(file);
 }
 
