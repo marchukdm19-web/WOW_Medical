@@ -1,0 +1,571 @@
+/* ============================================
+   WOW Medical — Mobile Responsive
+   Адаптація для екранів 320px – 768px
+   Підключається останнім
+   ============================================ */
+
+/* === 768px (Tablets / iPad) === */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 16px;
+  }
+
+  .header__inner {
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 12px 0;
+  }
+
+  .header__right,
+  .header__nav {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .logo__icon {
+    width: 44px;
+    height: 44px;
+  }
+
+  .logo__brand {
+    font-size: 1.4rem;
+  }
+
+  .hero__title {
+    font-size: 1.8rem;
+  }
+
+  .hero {
+    padding: 20px 0 28px;
+  }
+
+  /* Stats grid: 2 columns → wraps */
+  .stats-grid {
+    grid-template-columns: 1fr !important;
+    gap: 14px;
+  }
+
+  .stats-card {
+    padding: 20px;
+  }
+
+  .stats-card__icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .stats-card__value {
+    font-size: 1.5rem;
+  }
+
+  /* Search */
+  .search-box {
+    flex-direction: column;
+  }
+
+  .btn--search {
+    width: 100%;
+  }
+
+  /* Form */
+  .form__grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .form__actions {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+  }
+
+  .btn--save {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Medical point selector */
+  .medical-point-selector {
+    flex-direction: column;
+  }
+
+  .mp-btn {
+    width: 100%;
+  }
+
+  /* Cards */
+  .card__header {
+    padding: 16px 20px;
+  }
+
+  .card__body {
+    padding: 16px 20px;
+  }
+
+  .card__title {
+    font-size: 1.05rem;
+  }
+
+  /* Tables */
+  .table-wrapper {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .data-table th,
+  .data-table td {
+    padding: 10px 14px;
+    font-size: 0.82rem;
+  }
+
+  /* Journal tabs */
+  .journal-tabs {
+    flex-wrap: wrap;
+  }
+
+  .journal-tab {
+    font-size: 0.8rem;
+    padding: 10px 14px;
+  }
+
+  /* Journal actions */
+  .journal-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .journal-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Import box */
+  .import-box__actions {
+    flex-direction: column;
+  }
+
+  .import-box__actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .import-box__dropzone {
+    padding: 32px 16px;
+  }
+
+  /* Login modal */
+  .login-card {
+    margin: 0 16px;
+    padding: 32px 24px;
+  }
+
+  .login-card__title {
+    font-size: 1.2rem;
+  }
+
+  /* Toast */
+  .toast {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    font-size: 0.85rem;
+  }
+
+  /* Footer */
+  .footer {
+    padding: 16px 0;
+  }
+
+  .footer__text {
+    font-size: 0.8rem;
+  }
+
+  /* Loading overlay */
+  .loading-spinner {
+    width: 40px;
+    height: 40px;
+  }
+
+  .loading-text {
+    font-size: 0.9rem;
+  }
+}
+
+/* === 414px (iPhone 11/Plus) === */
+@media (max-width: 414px) {
+  .header__inner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .header__right,
+  .header__nav {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .logo {
+    justify-content: center;
+  }
+
+  .hero__title {
+    font-size: 1.55rem;
+  }
+
+  .hero__subtitle {
+    font-size: 0.88rem;
+  }
+
+  .hero {
+    padding: 16px 0 22px;
+  }
+
+  .stats-card {
+    padding: 16px;
+    gap: 14px;
+  }
+
+  .stats-card__icon {
+    width: 44px;
+    height: 44px;
+  }
+
+  .stats-card__value {
+    font-size: 1.35rem;
+  }
+
+  .stats-card__label {
+    font-size: 0.78rem;
+  }
+
+  .card__header {
+    padding: 12px 14px;
+  }
+
+  .card__body {
+    padding: 12px 14px;
+  }
+
+  .card__title {
+    font-size: 0.98rem;
+  }
+
+  .card__count {
+    font-size: 0.75rem;
+    padding: 3px 10px;
+  }
+
+  .badge {
+    font-size: 0.72rem;
+    padding: 6px 12px;
+  }
+
+  .input {
+    padding: 12px 14px;
+    font-size: 0.9rem;
+  }
+
+  .data-table th,
+  .data-table td {
+    padding: 8px 10px;
+    font-size: 0.75rem;
+  }
+
+  .login-card {
+    padding: 28px 20px;
+  }
+}
+
+/* === 390px (iPhone 13/14/15) === */
+@media (max-width: 390px) {
+  .container {
+    padding: 0 12px;
+  }
+
+  .hero__title {
+    font-size: 1.4rem;
+  }
+
+  .hero__subtitle {
+    font-size: 0.82rem;
+  }
+
+  .btn {
+    padding: 12px 18px;
+    font-size: 0.88rem;
+  }
+
+  .input {
+    padding: 11px 12px;
+    font-size: 0.85rem;
+  }
+
+  .input--search {
+    font-size: 0.9rem;
+    padding: 12px 14px;
+    padding-right: 40px;
+  }
+
+  .form__section-label {
+    font-size: 0.72rem;
+  }
+
+  .form__label {
+    font-size: 0.8rem;
+  }
+
+  .search-results__item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 10px 12px;
+  }
+
+  .search-results__item-name {
+    font-size: 0.85rem;
+  }
+
+  .search-results__item-badge {
+    font-size: 0.7rem;
+    padding: 3px 8px;
+  }
+}
+
+/* === 375px (iPhone 6/7/8/SE 2nd gen) === */
+@media (max-width: 375px) {
+  .hero__title {
+    font-size: 1.3rem;
+  }
+
+  .hero__subtitle {
+    font-size: 0.78rem;
+  }
+
+  .card__title {
+    font-size: 0.92rem;
+  }
+
+  .stats-card {
+    padding: 14px;
+    gap: 12px;
+  }
+
+  .stats-card__icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .stats-card__value {
+    font-size: 1.25rem;
+  }
+
+  .input {
+    padding: 10px 12px;
+  }
+
+  .btn {
+    padding: 11px 16px;
+    font-size: 0.84rem;
+  }
+}
+
+/* === 320px (iPhone SE 1st gen) === */
+@media (max-width: 320px) {
+  .container {
+    padding: 0 10px;
+  }
+
+  .hero__title {
+    font-size: 1.2rem;
+  }
+
+  .hero__subtitle {
+    font-size: 0.75rem;
+  }
+
+  .hero {
+    padding: 12px 0 16px;
+  }
+
+  .logo__icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .logo__brand {
+    font-size: 1.15rem;
+  }
+
+  .logo__sub {
+    font-size: 0.65rem;
+    letter-spacing: 1px;
+  }
+
+  .badge {
+    font-size: 0.68rem;
+    padding: 5px 10px;
+  }
+
+  .nav-link {
+    font-size: 0.75rem;
+  }
+
+  .card__header {
+    padding: 10px 12px;
+    gap: 8px;
+  }
+
+  .card__body {
+    padding: 10px 12px;
+  }
+
+  .card__title {
+    font-size: 0.85rem;
+  }
+
+  .card__count {
+    font-size: 0.7rem;
+    padding: 2px 8px;
+  }
+
+  .stats-card {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .stats-card__icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .stats-card__value {
+    font-size: 1.15rem;
+  }
+
+  .stats-card__label {
+    font-size: 0.7rem;
+  }
+
+  .input {
+    padding: 9px 10px;
+    font-size: 0.8rem;
+    border-radius: var(--radius-sm);
+  }
+
+  .input--search {
+    font-size: 0.82rem;
+    padding: 10px 12px;
+    padding-right: 36px;
+  }
+
+  .btn {
+    padding: 10px 14px;
+    font-size: 0.78rem;
+    border-radius: var(--radius-sm);
+    gap: 6px;
+  }
+
+  .btn--save {
+    padding: 12px 16px;
+    font-size: 0.85rem;
+  }
+
+  .mp-btn {
+    padding: 12px 16px;
+    font-size: 0.8rem;
+    gap: 8px;
+  }
+
+  .mp-btn__dot {
+    width: 12px;
+    height: 12px;
+  }
+
+  .form__section-label {
+    font-size: 0.68rem;
+    margin: 16px 0 12px;
+    padding-bottom: 6px;
+  }
+
+  .form__label {
+    font-size: 0.75rem;
+  }
+
+  .search-results__item {
+    padding: 8px 10px;
+    gap: 4px;
+    border-radius: var(--radius-sm);
+  }
+
+  .search-results__item-name {
+    font-size: 0.78rem;
+  }
+
+  .search-results__item-meta {
+    font-size: 0.7rem;
+  }
+
+  .search-results__item-badge {
+    font-size: 0.65rem;
+    padding: 2px 6px;
+  }
+
+  .data-table th,
+  .data-table td {
+    padding: 7px 8px;
+    font-size: 0.7rem;
+  }
+
+  .journal-tab {
+    font-size: 0.7rem;
+    padding: 8px 10px;
+  }
+
+  .journal-actions {
+    gap: 8px;
+  }
+
+  .login-card {
+    padding: 24px 16px;
+    border-radius: var(--radius);
+  }
+
+  .login-card__title {
+    font-size: 1.1rem;
+  }
+
+  .login-card__subtitle {
+    font-size: 0.78rem;
+  }
+
+  .login-card__error {
+    font-size: 0.75rem;
+  }
+
+  .toast {
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    padding: 10px 16px;
+    font-size: 0.78rem;
+  }
+
+  .footer__text {
+    font-size: 0.7rem;
+  }
+
+  .data-table__empty {
+    padding: 32px 10px !important;
+    font-size: 0.8rem !important;
+  }
+
+  .search-results {
+    max-height: 240px;
+  }
+
+  .search-input-icon {
+    right: 10px;
+    width: 16px;
+    height: 16px;
+  }
+}
