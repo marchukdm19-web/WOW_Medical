@@ -94,21 +94,25 @@ export async function getExaminations() {
 }
 
 /**
- * Видаляє всі медичні записи.
+ * Видаляє всі медичні записи (chunked batch).
  */
 export async function clearExaminations() {
   try {
     const colRef = collection(db, COLLECTION);
     const snapshot = await getDocs(query(colRef));
-    const batch = writeBatch(db);
+    const ids = [];
+    snapshot.forEach((doc) => ids.push(doc.id));
+
+    const BATCH_LIMIT = 400;
     let count = 0;
+    for (let i = 0; i < ids.length; i += BATCH_LIMIT) {
+      const batch = writeBatch(db);
+      const chunk = ids.slice(i, i + BATCH_LIMIT);
+      chunk.forEach((id) => batch.delete(doc(db, COLLECTION, id)));
+      await batch.commit();
+      count += chunk.length;
+    }
 
-    snapshot.forEach((document) => {
-      batch.delete(doc(db, COLLECTION, document.id));
-      count++;
-    });
-
-    if (count > 0) await batch.commit();
     console.log(`[API] Firestore: видалено ${count} медичних записів`);
     return count;
   } catch (error) {
