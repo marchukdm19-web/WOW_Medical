@@ -163,7 +163,11 @@ async function showChildHistory(fullName) {
     const allRecords = await getExaminations();
     const childHistory = allRecords.filter((exam) =>
       exam.childName && normalize(exam.childName) === normalize(fullName)
-    );
+    ).map(function(exam) {
+      // Fallback для старих записів без medicalStation
+      if (!exam.medicalStation) exam.medicalStation = 'white';
+      return exam;
+    });
 
     historyCount.textContent = childHistory.length;
 
