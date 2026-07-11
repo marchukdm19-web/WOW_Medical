@@ -54,7 +54,6 @@ const importBtn = document.getElementById('importBtn');
 const clearBtn = document.getElementById('clearBtn');
 const importStatus = document.getElementById('importStatus');
 const totalChildren = document.getElementById('totalChildren');
-const lastImport = document.getElementById('lastImport');
 const tableBody = document.getElementById('tableBody');
 const tableCount = document.getElementById('tableCount');
 const loadingOverlay = document.getElementById('loadingOverlay');
@@ -352,7 +351,6 @@ async function handleClear() {
 
 function updateStats() {
   totalChildren.textContent = currentChildren.length;
-  lastImport.textContent = sessionStorage.getItem(IMPORT_DATE_KEY) || '—';
 }
 
 function renderTable() {
