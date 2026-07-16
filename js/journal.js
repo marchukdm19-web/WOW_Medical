@@ -38,6 +38,12 @@ const mpBadgeClass = {
 async function loadJournal() {
   try {
     allRecords = await getExaminations();
+    // Сортуємо хронологічно: найстаріші записи перші, найновіші — останні
+    allRecords.sort((a, b) => {
+      const timeA = a.createdAt && a.createdAt.toDate ? a.createdAt.toDate().getTime() : 0;
+      const timeB = b.createdAt && b.createdAt.toDate ? b.createdAt.toDate().getTime() : 0;
+      return timeA - timeB;
+    });
     console.log(`[Journal] Завантажено ${allRecords.length} записів`);
   } catch (error) {
     console.error('[Journal] Помилка завантаження:', error);
