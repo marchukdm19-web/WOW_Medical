@@ -367,25 +367,14 @@ function applyMedicalPointToUI(point) {
    ======================================== */
 
 async function init() {
-  await initChildren();
+  // ==========================================
+  // Обробники подій додаємо НЕГАЙНО,
+  // до будь-яких асинхронних операцій.
+  // Це критично, щоб кнопки стартового екрану
+  // реагували миттєво, не чекаючи Firestore.
+  // ==========================================
 
-  if (childrenData.length === 0) {
-    showToast('База порожня. Імпортуйте дітей через Admin-панель.', 'error');
-  }
-
-  // Перевіряємо, чи медпункт вже обраний раніше
-  const savedPoint = getSavedMedicalPoint();
-
-  if (savedPoint === 'white' || savedPoint === 'black') {
-    // Медпункт уже обрано — одразу показуємо основний інтерфейс
-    applyMedicalPointToUI(savedPoint);
-    showMainApp();
-  } else {
-    // Медпункт не обрано — показуємо стартовий екран
-    showStartupScreen();
-  }
-
-  // Обробники стартового екрану
+  // Стартовий екран
   if (startupWhiteBtn) {
     startupWhiteBtn.addEventListener('click', () => {
       saveMedicalPoint('white');
@@ -415,6 +404,7 @@ async function init() {
     });
   }
 
+  // Пошук
   searchInput.addEventListener('input', debounceSearch);
   searchBtn.addEventListener('click', () => searchChildren(searchInput.value));
   searchInput.addEventListener('keydown', (e) => {
@@ -425,7 +415,31 @@ async function init() {
     if (!e.target.closest('.search-section')) clearResults();
   });
 
+  // Форма
   form.addEventListener('submit', handleSubmit);
+
+  // ==========================================
+  // Тепер можна асинхронно завантажувати дані
+  // ==========================================
+
+  await initChildren();
+
+  if (childrenData.length === 0) {
+    showToast('База порожня. Імпортуйте дітей через Admin-панель.', 'error');
+  }
+
+  // Визначаємо, який екран показати
+  const savedPoint = getSavedMedicalPoint();
+
+  if (savedPoint === 'white' || savedPoint === 'black') {
+    // Медпункт уже обрано — одразу основний інтерфейс
+    applyMedicalPointToUI(savedPoint);
+    showMainApp();
+  } else {
+    // Медпункт не обрано — показуємо стартовий екран
+    showStartupScreen();
+  }
+
   if (mainApp && mainApp.style.display !== 'none') {
     searchInput.focus();
   }
