@@ -799,6 +799,23 @@ body {
   color: #1A252F;
 }
 
+.startup-stat--fever .startup-stat__value {
+  color: #E74C3C;
+  font-size: 1.35rem;
+}
+
+.startup-stat__dot--fever {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #FF6B6B, #E74C3C);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(255, 107, 107, 0.25);
+}
+
 .startup-stat--total .startup-stat__value {
   color: #2C3E50;
   font-size: 1.35rem;

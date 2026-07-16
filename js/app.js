@@ -364,6 +364,12 @@ async function loadStartupStats() {
       return r.timestamp.startsWith(todayStr);
     });
 
+    // Підвищена температура сьогодні (≥37°C)
+    const feverToday = todayRecords.filter((r) => {
+      const temp = parseFloat(r.temperature);
+      return !isNaN(temp) && temp >= 37;
+    }).length;
+
     // Білий медпункт
     const whiteToday = todayRecords.filter((r) => (r.medicalStation || 'white') === 'white').length;
     const whiteAll = allRecords.filter((r) => (r.medicalStation || 'white') === 'white');
@@ -399,6 +405,9 @@ async function loadStartupStats() {
         ? `Останнє: ${getTimeString(blackLast.createdAt)}, ${blackLast.childName || '—'}`
         : 'Немає записів';
     }
+    const statFeverToday = document.getElementById('statFeverToday');
+    if (statFeverToday) statFeverToday.textContent = feverToday;
+
     if (statTotalChildren) statTotalChildren.textContent = uniqueChildren.size;
   } catch (error) {
     console.warn('[App] Не вдалося завантажити статистику:', error);
