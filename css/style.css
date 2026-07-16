@@ -373,6 +373,13 @@ body {
   min-height: 90px;
 }
 
+.input--textarea-health {
+  resize: none;
+  min-height: 48px;
+  height: auto;
+  line-height: 1.5;
+}
+
 .input--readonly {
   background: #EEF2F7;
   color: var(--color-text-secondary);
