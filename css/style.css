@@ -392,6 +392,17 @@ body {
   box-shadow: none;
 }
 
+#phone.input--readonly {
+  cursor: pointer;
+  color: var(--color-text);
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+#phone.input--readonly:hover {
+  background: #E3ECF5;
+  border-color: var(--color-primary-light);
+}
+
 /* === Buttons === */
 .btn {
   display: inline-flex;

@@ -405,6 +405,31 @@ async function loadStartupStats() {
   }
 }
 
+function copyToClipboard(text) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).catch(() => {
+      fallbackCopyToClipboard(text);
+    });
+  } else {
+    fallbackCopyToClipboard(text);
+  }
+}
+
+function fallbackCopyToClipboard(text) {
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  textarea.style.position = 'fixed';
+  textarea.style.opacity = '0';
+  document.body.appendChild(textarea);
+  textarea.select();
+  try {
+    document.execCommand('copy');
+  } catch (e) {
+    // ignore
+  }
+  document.body.removeChild(textarea);
+}
+
 /* ========================================
    Стартовий екран — вибір медпункту
    ======================================== */
@@ -500,6 +525,16 @@ async function init() {
   document.addEventListener('click', (e) => {
     if (!e.target.closest('.search-section')) clearResults();
   });
+
+  // Копіювання телефону при кліку
+  if (fieldPhone) {
+    fieldPhone.addEventListener('click', () => {
+      const phone = fieldPhone.value.trim();
+      if (!phone || phone === '—') return;
+      copyToClipboard(phone);
+      showToast('Номер скопійовано!', 'success');
+    });
+  }
 
   // Форма
   form.addEventListener('submit', handleSubmit);
