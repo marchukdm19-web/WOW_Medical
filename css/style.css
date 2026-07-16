@@ -707,14 +707,15 @@ body {
 .startup-stat {
   flex: 1;
   display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 16px 18px;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 18px 16px;
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(8px);
   border-radius: 16px;
   border: 1px solid rgba(225, 232, 237, 0.7);
-  text-align: left;
+  text-align: center;
   transition: all 0.25s ease;
 }
 
@@ -729,7 +730,6 @@ body {
   height: 12px;
   border-radius: 50%;
   flex-shrink: 0;
-  margin-top: 4px;
 }
 
 .startup-stat__dot--white {
@@ -748,7 +748,6 @@ body {
   justify-content: center;
   width: 28px;
   height: 28px;
-  margin-top: 0;
   border-radius: 10px;
   background: linear-gradient(135deg, #4A90D9, #357ABD);
   color: #fff;
@@ -758,6 +757,7 @@ body {
 .startup-stat__info {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 2px;
   min-width: 0;
 }
