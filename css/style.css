@@ -620,6 +620,35 @@ body {
   color: var(--color-text);
 }
 
+/* === Startup Screen Journal Link === */
+.startup-screen__journal {
+  margin-top: 32px;
+  text-align: center;
+}
+
+.startup-journal-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border: 1px solid var(--color-border);
+  border-radius: 100px;
+  background: #fff;
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all var(--transition);
+}
+
+.startup-journal-link:hover {
+  background: #EEF4FB;
+  color: var(--color-primary);
+  border-color: var(--color-primary-light);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(74, 144, 217, 0.15);
+}
+
 /* === Header Change Medical Point Button === */
 .header__change-btn {
   display: inline-flex;
