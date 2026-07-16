@@ -1,18 +1,27 @@
 /* ============================================
-   WOW Medical — App (ES Module)
-   Лікар: пошук, форма, історія
-   Дані — тільки Firestore
-   ============================================ */
+    WOW Medical — App (ES Module)
+    Лікар: пошук, форма, історія
+    Дані — тільки Firestore
+    ============================================ */
 
 import { CONFIG } from './config.js';
 import { loadChildren } from './database.js';
 import { saveVisit, getExaminations } from './api.js';
+
+// Ключ localStorage для збереження медпункту (окремий, не впливає на інші налаштування)
+const STORAGE_KEY_MEDICAL_POINT = 'wow_medical_selected_point';
 
 // Стан
 let childrenData = [];
 let selectedChild = null;
 let searchDebounceTimer = null;
 let selectedMedicalPoint = 'white';
+
+// Стартовий екран
+const startupScreen = document.getElementById('startupScreen');
+const mainApp = document.getElementById('mainApp');
+const startupWhiteBtn = document.getElementById('startupWhite');
+const startupBlackBtn = document.getElementById('startupBlack');
 
 // DOM
 const searchInput = document.getElementById('searchInput');
@@ -311,6 +320,49 @@ function showToast(message, type) {
 }
 
 /* ========================================
+   Стартовий екран — вибір медпункту
+   ======================================== */
+
+function getSavedMedicalPoint() {
+  try {
+    return localStorage.getItem(STORAGE_KEY_MEDICAL_POINT);
+  } catch (e) {
+    return null;
+  }
+}
+
+function saveMedicalPoint(point) {
+  try {
+    localStorage.setItem(STORAGE_KEY_MEDICAL_POINT, point);
+  } catch (e) {
+    console.warn('[App] Не вдалося зберегти медпункт у localStorage');
+  }
+}
+
+function clearMedicalPoint() {
+  try {
+    localStorage.removeItem(STORAGE_KEY_MEDICAL_POINT);
+  } catch (e) {
+    // ignore
+  }
+}
+
+function showStartupScreen() {
+  if (startupScreen) startupScreen.style.display = '';
+  if (mainApp) mainApp.style.display = 'none';
+}
+
+function showMainApp() {
+  if (startupScreen) startupScreen.style.display = 'none';
+  if (mainApp) mainApp.style.display = '';
+}
+
+function applyMedicalPointToUI(point) {
+  selectedMedicalPoint = point;
+  setMedicalPoint(point);
+}
+
+/* ========================================
    Ініціалізація
    ======================================== */
 
@@ -321,8 +373,47 @@ async function init() {
     showToast('База порожня. Імпортуйте дітей через Admin-панель.', 'error');
   }
 
+  // Перевіряємо, чи медпункт вже обраний раніше
+  const savedPoint = getSavedMedicalPoint();
+
+  if (savedPoint === 'white' || savedPoint === 'black') {
+    // Медпункт уже обрано — одразу показуємо основний інтерфейс
+    applyMedicalPointToUI(savedPoint);
+    showMainApp();
+  } else {
+    // Медпункт не обрано — показуємо стартовий екран
+    showStartupScreen();
+  }
+
+  // Обробники стартового екрану
+  if (startupWhiteBtn) {
+    startupWhiteBtn.addEventListener('click', () => {
+      saveMedicalPoint('white');
+      applyMedicalPointToUI('white');
+      showMainApp();
+    });
+  }
+
+  if (startupBlackBtn) {
+    startupBlackBtn.addEventListener('click', () => {
+      saveMedicalPoint('black');
+      applyMedicalPointToUI('black');
+      showMainApp();
+    });
+  }
+
+  // Кнопки медпункту у формі
   mpWhiteBtn.addEventListener('click', () => setMedicalPoint('white'));
   mpBlackBtn.addEventListener('click', () => setMedicalPoint('black'));
+
+  // Кнопка зміни медпункту у header
+  const changePointBtn = document.getElementById('changeMedicalPointBtn');
+  if (changePointBtn) {
+    changePointBtn.addEventListener('click', () => {
+      clearMedicalPoint();
+      showStartupScreen();
+    });
+  }
 
   searchInput.addEventListener('input', debounceSearch);
   searchBtn.addEventListener('click', () => searchChildren(searchInput.value));
@@ -335,7 +426,9 @@ async function init() {
   });
 
   form.addEventListener('submit', handleSubmit);
-  searchInput.focus();
+  if (mainApp && mainApp.style.display !== 'none') {
+    searchInput.focus();
+  }
 }
 
 init();
