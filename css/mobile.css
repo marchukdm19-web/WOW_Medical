@@ -93,26 +93,113 @@
     width: 100%;
   }
 
-  /* Startup screen */
+  /* Startup screen — mobile adaptation */
+  .startup-screen {
+    align-items: flex-start;
+    padding-top: 10vh;
+  }
+
+  .startup-screen::before {
+    top: -160px;
+    right: -120px;
+    width: 240px;
+    height: 240px;
+  }
+
+  .startup-screen::after {
+    bottom: -140px;
+    left: -100px;
+    width: 200px;
+    height: 200px;
+  }
+
+  .startup-screen__inner {
+    padding: 20px 16px 36px;
+  }
+
+  .startup-screen__logo {
+    margin-bottom: 18px;
+  }
+
+  .startup-screen__logo .logo__icon {
+    width: 44px;
+    height: 44px;
+  }
+
+  .startup-screen__logo .logo__brand {
+    font-size: 1.45rem;
+  }
+
+  .startup-screen__title {
+    font-size: 1.25rem;
+    margin-bottom: 4px;
+  }
+
+  .startup-screen__subtitle {
+    font-size: 0.82rem;
+    margin-bottom: 24px;
+    padding: 0 8px;
+  }
+
   .startup-screen__buttons {
     flex-direction: column;
     align-items: center;
-    gap: 16px;
+    gap: 14px;
+    margin-bottom: 22px;
   }
 
   .startup-btn {
     max-width: 100%;
     width: 100%;
-    padding: 28px 20px;
+    padding: 22px 18px;
+    gap: 12px;
+    border-radius: 20px;
   }
 
-  .startup-screen__title {
-    font-size: 1.3rem;
+  .startup-btn__icon svg {
+    width: 32px;
+    height: 32px;
   }
 
-  .startup-screen__subtitle {
-    font-size: 0.85rem;
-    margin-bottom: 28px;
+  .startup-btn__label {
+    font-size: 0.95rem;
+  }
+
+  /* Startup stats — колонка на мобільних */
+  .startup-screen__stats {
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .startup-stat {
+    padding: 14px 16px;
+    border-radius: 14px;
+  }
+
+  .startup-stat__value {
+    font-size: 1.1rem;
+  }
+
+  .startup-stat--total .startup-stat__value {
+    font-size: 1.2rem;
+  }
+
+  .startup-stat__hint {
+    font-size: 0.62rem;
+  }
+
+  .startup-btn--journal {
+    padding: 18px 20px;
+    border-radius: 16px;
+  }
+
+  .startup-btn--journal .startup-btn__label {
+    font-size: 0.9rem;
+  }
+
+  .startup-btn__hint {
+    font-size: 0.68rem;
   }
 
   .header__change-text {
@@ -121,16 +208,6 @@
 
   .header__change-btn {
     padding: 6px 10px;
-  }
-
-  /* Startup stats */
-  .startup-screen__stats {
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .startup-stat {
-    padding: 12px 14px;
   }
 
   /* Cards */
