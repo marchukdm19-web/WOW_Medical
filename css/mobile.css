@@ -123,6 +123,16 @@
     padding: 6px 10px;
   }
 
+  /* Startup stats */
+  .startup-screen__stats {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .startup-stat {
+    padding: 12px 14px;
+  }
+
   /* Cards */
   .card__header {
     padding: 16px 20px;

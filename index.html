@@ -59,6 +59,40 @@
           <span class="startup-btn__label">Чорний медпункт</span>
         </button>
       </div>
+      <div class="startup-screen__stats" id="startupStats">
+        <div class="startup-stat startup-stat--white">
+          <span class="startup-stat__dot startup-stat__dot--white"></span>
+          <div class="startup-stat__info">
+            <span class="startup-stat__label">Білий медпункт</span>
+            <span class="startup-stat__value" id="statWhiteToday">—</span>
+            <span class="startup-stat__hint" id="statWhiteLast">—</span>
+          </div>
+        </div>
+        <div class="startup-stat startup-stat--black">
+          <span class="startup-stat__dot startup-stat__dot--black"></span>
+          <div class="startup-stat__info">
+            <span class="startup-stat__label">Чорний медпункт</span>
+            <span class="startup-stat__value" id="statBlackToday">—</span>
+            <span class="startup-stat__hint" id="statBlackLast">—</span>
+          </div>
+        </div>
+        <div class="startup-stat startup-stat--total">
+          <span class="startup-stat__dot startup-stat__dot--total">
+            <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M13 3v8a2 2 0 01-2 2H3"/>
+              <circle cx="5" cy="5" r="1.5"/>
+              <circle cx="5" cy="9" r="1.5"/>
+              <circle cx="9" cy="5" r="1.5"/>
+              <circle cx="9" cy="9" r="1.5"/>
+            </svg>
+          </span>
+          <div class="startup-stat__info">
+            <span class="startup-stat__label">Загалом звернулось дітей</span>
+            <span class="startup-stat__value" id="statTotalChildren">—</span>
+            <span class="startup-stat__hint">за весь час</span>
+          </div>
+        </div>
+      </div>
       <div class="startup-screen__buttons startup-screen__buttons--journal">
         <a href="journal.html" class="startup-btn startup-btn--journal">
           <span class="startup-btn__icon">

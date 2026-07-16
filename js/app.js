@@ -327,6 +327,85 @@ function showToast(message, type) {
 }
 
 /* ========================================
+   Статистика на стартовому екрані
+   ======================================== */
+
+function getTodayDateString() {
+  const now = new Date();
+  const yyyy = now.getFullYear();
+  const mm = String(now.getMonth() + 1).padStart(2, '0');
+  const dd = String(now.getDate()).padStart(2, '0');
+  return `${dd}.${mm}.${yyyy}`;
+}
+
+function getTimeString(date) {
+  if (!date || !date.toDate) return '';
+  const d = date.toDate();
+  const hh = String(d.getHours()).padStart(2, '0');
+  const min = String(d.getMinutes()).padStart(2, '0');
+  return `${hh}:${min}`;
+}
+
+async function loadStartupStats() {
+  try {
+    const allRecords = await getExaminations();
+    const todayStr = getTodayDateString();
+
+    // Сортуємо хронологічно
+    allRecords.sort((a, b) => {
+      const timeA = a.createdAt && a.createdAt.toDate ? a.createdAt.toDate().getTime() : 0;
+      const timeB = b.createdAt && b.createdAt.toDate ? b.createdAt.toDate().getTime() : 0;
+      return timeA - timeB;
+    });
+
+    // Фільтруємо за сьогодні
+    const todayRecords = allRecords.filter((r) => {
+      if (!r.timestamp) return false;
+      return r.timestamp.startsWith(todayStr);
+    });
+
+    // Білий медпункт
+    const whiteToday = todayRecords.filter((r) => (r.medicalStation || 'white') === 'white').length;
+    const whiteAll = allRecords.filter((r) => (r.medicalStation || 'white') === 'white');
+    const whiteLast = whiteAll.length > 0 ? whiteAll[whiteAll.length - 1] : null;
+
+    // Чорний медпункт
+    const blackToday = todayRecords.filter((r) => r.medicalStation === 'black').length;
+    const blackAll = allRecords.filter((r) => r.medicalStation === 'black');
+    const blackLast = blackAll.length > 0 ? blackAll[blackAll.length - 1] : null;
+
+    // Унікальні діти за весь час
+    const uniqueChildren = new Set();
+    allRecords.forEach((r) => {
+      if (r.childName) uniqueChildren.add(r.childName.trim().toLowerCase());
+    });
+
+    // Оновлюємо DOM
+    const statWhiteToday = document.getElementById('statWhiteToday');
+    const statWhiteLast = document.getElementById('statWhiteLast');
+    const statBlackToday = document.getElementById('statBlackToday');
+    const statBlackLast = document.getElementById('statBlackLast');
+    const statTotalChildren = document.getElementById('statTotalChildren');
+
+    if (statWhiteToday) statWhiteToday.textContent = `Сьогодні: ${whiteToday}`;
+    if (statWhiteLast) {
+      statWhiteLast.textContent = whiteLast
+        ? `Останнє: ${getTimeString(whiteLast.createdAt)}, ${whiteLast.childName || '—'}`
+        : 'Немає записів';
+    }
+    if (statBlackToday) statBlackToday.textContent = `Сьогодні: ${blackToday}`;
+    if (statBlackLast) {
+      statBlackLast.textContent = blackLast
+        ? `Останнє: ${getTimeString(blackLast.createdAt)}, ${blackLast.childName || '—'}`
+        : 'Немає записів';
+    }
+    if (statTotalChildren) statTotalChildren.textContent = uniqueChildren.size;
+  } catch (error) {
+    console.warn('[App] Не вдалося завантажити статистику:', error);
+  }
+}
+
+/* ========================================
    Стартовий екран — вибір медпункту
    ======================================== */
 
@@ -430,6 +509,9 @@ async function init() {
   // ==========================================
 
   await initChildren();
+
+  // Завантажуємо статистику для стартового екрану (паралельно, не блокує)
+  loadStartupStats();
 
   if (childrenData.length === 0) {
     showToast('База порожня. Імпортуйте дітей через Admin-панель.', 'error');
