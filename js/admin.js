@@ -6,7 +6,7 @@
    ============================================ */
 
 import { saveChildren, loadChildren, deleteChildren } from './database.js';
-import { getExaminations, clearExaminations } from './api.js';
+import { getExaminations, clearExaminations, deleteRecord } from './api.js';
 
 const IMPORT_DATE_KEY = 'lastImportDate';
 const AUTH_KEY = 'wow_admin_authenticated';
@@ -105,6 +105,25 @@ async function initApp() {
     renderJournal();
   });
 
+  // Обробник видалення окремого запису (делегування на body)
+  journalBody.addEventListener('click', async (e) => {
+    const btn = e.target.closest('.btn-delete-record');
+    if (!btn) return;
+    const recordId = btn.getAttribute('data-record-id');
+    if (!recordId) return;
+    const name = btn.closest('tr')?.querySelector('strong')?.textContent || 'запис';
+    if (!confirm(`Видалити запис «${name}»? Цю дію неможливо скасувати.`)) return;
+    btn.disabled = true;
+    const result = await deleteRecord(recordId);
+    if (result.success) {
+      showStatus(`✅ Запис «${name}» видалено`, 'success');
+      await refreshData();
+    } else {
+      showStatus('❌ Помилка: ' + (result.message || 'невідома помилка'), 'error');
+      btn.disabled = false;
+    }
+  });
+
   // Тепер завантажуємо дані
   await refreshData();
 }
@@ -177,14 +196,14 @@ function renderJournal() {
 
   if (filtered.length === 0) {
     const msg = currentExaminations.length === 0 ? 'Немає записів.' : 'Немає записів для обраного медпункту.';
-    journalBody.innerHTML = `<tr><td colspan="10" class="data-table__empty">${msg}</td></tr>`;
+    journalBody.innerHTML = `<tr><td colspan="12" class="data-table__empty">${msg}</td></tr>`;
     return;
   }
 
   journalBody.innerHTML = filtered.map((exam, i) => {
     const msLabel = exam.medicalStation === 'black' ? 'Чорний' : 'Білий';
     const msClass = exam.medicalStation === 'black' ? 'data-table__mp-badge--black' : 'data-table__mp-badge--white';
-    return `<tr>
+    return `<tr data-record-id="${esc(exam.id || '')}">
       <td>${i + 1}</td>
       <td>${esc(exam.timestamp || '—')}</td>
       <td><strong>${esc(exam.childName || '—')}</strong></td>
@@ -195,6 +214,7 @@ function renderJournal() {
       <td>${esc(exam.doctorName || '—')}</td>
       <td><span class="data-table__mp-badge ${msClass}">${msLabel}</span></td>
       <td>${exam.parentsNotified ? '<span class="data-table__badge data-table__badge--yes">Так</span>' : '<span class="data-table__badge data-table__badge--no">Ні</span>'}</td>
+      <td class="data-table__actions"><button type="button" class="btn-delete-record" data-record-id="${esc(exam.id || '')}" title="Видалити запис">🗑️</button></td>
     </tr>`;
   }).join('');
 }

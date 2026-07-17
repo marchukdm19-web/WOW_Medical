@@ -510,3 +510,46 @@
     font-size: 0.8rem;
   }
 }
+
+/* === Delete Record Button === */
+.data-table__actions-th {
+  width: 36px;
+}
+
+.data-table__actions {
+  text-align: center;
+  padding: 4px !important;
+}
+
+.btn-delete-record {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid transparent;
+  background: transparent;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all var(--transition);
+  opacity: 0.45;
+}
+
+.btn-delete-record:hover {
+  background: rgba(231, 76, 60, 0.1);
+  border-color: rgba(231, 76, 60, 0.3);
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.btn-delete-record:active {
+  transform: scale(0.95);
+}
+
+.btn-delete-record:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  transform: none;
+}

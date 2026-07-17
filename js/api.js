@@ -96,6 +96,20 @@ export async function getExaminations() {
 }
 
 /**
+ * Видаляє окремий медичний запис за ID.
+ */
+export async function deleteRecord(recordId) {
+  try {
+    await deleteDoc(doc(db, COLLECTION, recordId));
+    console.log('[API] Запис видалено:', recordId);
+    return { success: true };
+  } catch (error) {
+    console.error('[API] Помилка видалення запису:', error);
+    return { success: false, message: error.message };
+  }
+}
+
+/**
  * Видаляє всі медичні записи (chunked batch).
  */
 export async function clearExaminations() {
