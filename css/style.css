@@ -1206,6 +1206,99 @@ body {
   gap: 16px;
 }
 
+.cs-table {
+  flex: 1;
+  min-width: 240px;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+  background: #FAFBFC;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+}
+
+.cs-table thead tr {
+  background: #EEF2F7;
+}
+
+.cs-table__cat {
+  padding: 10px 14px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--color-text);
+  text-align: left;
+  letter-spacing: 0.3px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.cs-table tbody tr {
+  transition: background var(--transition);
+}
+
+.cs-table tbody tr:hover {
+  background: rgba(74, 144, 217, 0.04);
+}
+
+.cs-table tbody tr:not(:last-child) td {
+  border-bottom: 1px solid rgba(225, 232, 237, 0.5);
+}
+
+.cs-table__num {
+  width: 32px;
+  padding: 6px 4px 6px 12px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  text-align: center;
+  opacity: 0.6;
+}
+
+.cs-table__icon {
+  display: inline-block;
+  width: 22px;
+  text-align: center;
+  margin-right: 4px;
+  font-size: 0.85rem;
+}
+
+.cs-table__name {
+  padding: 6px 8px;
+  font-weight: 500;
+  color: var(--color-text);
+  white-space: nowrap;
+}
+
+.cs-table__bar-cell {
+  padding: 6px 8px;
+  width: 100%;
+}
+
+.cs-table__bar {
+  height: 6px;
+  background: #E8ECF0;
+  border-radius: 3px;
+  overflow: hidden;
+  min-width: 40px;
+}
+
+.cs-table__fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-primary-light));
+  border-radius: 3px;
+  transition: width 0.5s ease;
+  min-width: 3px;
+}
+
+.cs-table__count {
+  width: 32px;
+  padding: 6px 12px 6px 4px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--color-primary);
+  text-align: right;
+}
+
+/* Old cs-* classes kept for backward compat (remove after deploy) */
 .cs-category {
   flex: 1;
   min-width: 200px;

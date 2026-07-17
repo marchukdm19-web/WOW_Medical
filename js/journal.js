@@ -106,7 +106,6 @@ function buildComplaintStats(records) {
   const todayStr = getTodayDateString();
   const todayRecords = records.filter((r) => r.timestamp && r.timestamp.startsWith(todayStr));
 
-  // Count each suggested complaint across all today's records
   const complaintCount = {};
   let totalClicks = 0;
 
@@ -119,21 +118,26 @@ function buildComplaintStats(records) {
     });
   });
 
-  // Sort by count descending
-  const sorted = Object.entries(complaintCount).sort((a, b) => b[1] - a[1]);
-
   if (complaintStatsTotal) {
     complaintStatsTotal.textContent = totalClicks;
   }
 
   if (!complaintStatsBody) return;
 
-  if (sorted.length === 0) {
+  if (Object.keys(complaintCount).length === 0) {
     complaintStatsBody.innerHTML = '<p class="data-table__empty">Сьогодні ще немає скарг 😊</p>';
     return;
   }
 
-  // Group by category for visual display
+  // Icons for each complaint
+  const complaintIcons = {
+    'Головний біль': '🤕', 'Підвищена температура': '🌡️', 'Слабкість': '😴', 'Запаморочення': '💫',
+    'Біль у горлі': '🗣️', 'Нежить': '🤧', 'Кашель': '😮‍💨', 'Закладеність носа': '👃',
+    'Нудота': '🤢', 'Блювання': '🤮', 'Біль у животі': '😖', 'Діарея': '💧',
+    'Подряпина': '🩹', 'Садно': '🩹', 'Забій': '💢', 'Розтягнення': '🦵', 'Поріз': '🔪', 'Травма': '🤕',
+    'Укус комахи': '🦟', 'Алергічна реакція': '🤧', 'Біль у вусі': '👂', 'Біль у зубі': '🦷', 'Почервоніння очей': '👁️'
+  };
+
   const categories = {
     '🤒 Загальні': ['Головний біль', 'Підвищена температура', 'Слабкість', 'Запаморочення'],
     '😷 Дихальні шляхи': ['Біль у горлі', 'Нежить', 'Кашель', 'Закладеність носа'],
@@ -143,31 +147,36 @@ function buildComplaintStats(records) {
   };
 
   let html = '';
-  for (const [catTitle, catComplaints] of Object.entries(categories)) {
-    const catItems = sorted.filter(([name]) => catComplaints.includes(name));
-    // Also include "other" (custom) items under Інше
-    const otherItems = catTitle === '🦟 Інше'
-      ? sorted.filter(([name]) => !Object.values(categories).flat().includes(name))
-      : [];
+  let globalIdx = 0;
 
-    const allCatItems = [...catItems, ...otherItems];
+  for (const [catTitle, catComplaints] of Object.entries(categories)) {
+    const catItems = Object.entries(complaintCount).filter(([name]) => catComplaints.includes(name));
+    const otherItems = catTitle === '🦟 Інше'
+      ? Object.entries(complaintCount).filter(([name]) => !Object.values(categories).flat().includes(name))
+      : [];
+    const allCatItems = [...catItems, ...otherItems].sort((a, b) => b[1] - a[1]);
     if (allCatItems.length === 0) continue;
 
-    html += `<div class="cs-category">
-      <div class="cs-category__title">${catTitle}</div>
-      <div class="cs-category__items">`;
+    html += `<table class="cs-table">`;
+    html += `<thead><tr><th colspan="3" class="cs-table__cat">${catTitle}</th></tr></thead>`;
+    html += `<tbody>`;
+
     allCatItems.forEach(([name, count]) => {
-      const maxCount = sorted[0] ? sorted[0][1] : 1;
-      const barWidth = Math.round((count / maxCount) * 100);
-      html += `<div class="cs-item">
-        <span class="cs-item__name">${escapeHTML(name)}</span>
-        <div class="cs-item__bar">
-          <div class="cs-item__fill" style="width:${barWidth}%"></div>
-        </div>
-        <span class="cs-item__count">${count}</span>
-      </div>`;
+      globalIdx++;
+      const maxCount = Math.max(...Object.values(complaintCount), 1);
+      const barW = Math.round((count / maxCount) * 100);
+      const icon = complaintIcons[name] || '📋';
+      html += `<tr>
+        <td class="cs-table__num">${globalIdx}</td>
+        <td class="cs-table__name"><span class="cs-table__icon">${icon}</span>${escapeHTML(name)}</td>
+        <td class="cs-table__bar-cell">
+          <div class="cs-table__bar"><div class="cs-table__fill" style="width:${barW}%"></div></div>
+        </td>
+        <td class="cs-table__count">${count}</td>
+      </tr>`;
     });
-    html += `</div></div>`;
+
+    html += `</tbody></table>`;
   }
 
   complaintStatsBody.innerHTML = html;
