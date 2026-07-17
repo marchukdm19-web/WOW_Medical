@@ -72,7 +72,7 @@
   width: 56px;
   height: 56px;
   border-radius: var(--radius);
-  background: linear-gradient(135deg, #EEF4FB, #E3F0FC);
+  background: linear-gradient(135deg, #E8F8F0, #D5F5E3);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -130,7 +130,7 @@
 .import-box__dropzone:hover,
 .import-box__dropzone--dragover {
   border-color: var(--color-primary);
-  background: #EEF4FB;
+  background: #E8F8F0;
 }
 
 .import-box__dropzone--has-file {
@@ -440,7 +440,7 @@
 }
 
 .login-card__logo svg {
-  filter: drop-shadow(0 4px 8px rgba(74, 144, 217, 0.25));
+  filter: drop-shadow(0 4px 8px rgba(39, 174, 96, 0.25));
 }
 
 .login-card__title {
