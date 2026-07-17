@@ -51,6 +51,24 @@
         <p class="hero__subtitle">Перегляд усіх медичних оглядів</p>
       </section>
 
+      <!-- Статистика скарг за сьогодні -->
+      <section class="table-section" id="complaintStatsSection">
+        <div class="card">
+          <div class="card__header">
+            <svg class="card__header-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+            </svg>
+            <h2 class="card__title">Статистика скарг за сьогодні</h2>
+            <span class="card__count" id="complaintStatsTotal">0</span>
+          </div>
+          <div class="card__body">
+            <div id="complaintStatsBody" class="complaint-stats">
+              <p class="data-table__empty">Завантаження...</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- Журнал оглядів (тільки читання) -->
       <section class="table-section">
         <div class="card">
@@ -109,6 +127,6 @@
     </div>
   </footer>
 
-  <script type="module" src="js/journal.js?v=1"></script>
+  <script type="module" src="js/journal.js?v=2"></script>
 </body>
 </html>

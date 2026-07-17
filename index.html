@@ -317,7 +317,62 @@
                 </div>
                 <div class="form__group form__group--full">
                   <label for="complaints" class="form__label">Скарги</label>
-                  <textarea id="complaints" class="input input--textarea" rows="3" placeholder="Опишіть скарги дитини..."></textarea>
+                  <textarea id="complaints" class="input input--textarea" rows="2" placeholder="Опишіть скарги дитини..."></textarea>
+                </div>
+
+                <!-- Запропоновані скарги -->
+                <div class="suggested-complaints" id="suggestedComplaints">
+                  <div class="sc-category">
+                    <div class="sc-category__title">🤒 Загальні</div>
+                    <div class="sc-category__list">
+                      <label class="sc-check"><input type="checkbox" data-complaint="Головний біль"><span class="sc-check__mark"></span><span class="sc-check__text">Головний біль</span></label>
+                      <label class="sc-check"><input type="checkbox" data-complaint="Підвищена температура"><span class="sc-check__mark"></span><span class="sc-check__text">Підвищена температура</span></label>
+                      <label class="sc-check"><input type="checkbox" data-complaint="Слабкість"><span class="sc-check__mark"></span><span class="sc-check__text">Слабкість</span></label>
+                      <label class="sc-check"><input type="checkbox" data-complaint="Запаморочення"><span class="sc-check__mark"></span><span class="sc-check__text">Запаморочення</span></label>
+                    </div>
+                  </div>
+                  <div class="sc-category">
+                    <div class="sc-category__title">😷 Дихальні шляхи</div>
+                    <div class="sc-category__list">
+                      <label class="sc-check"><input type="checkbox" data-complaint="Біль у горлі"><span class="sc-check__mark"></span><span class="sc-check__text">Біль у горлі</span></label>
+                      <label class="sc-check"><input type="checkbox" data-complaint="Нежить"><span class="sc-check__mark"></span><span class="sc-check__text">Нежить</span></label>
+                      <label class="sc-check"><input type="checkbox" data-complaint="Кашель"><span class="sc-check__mark"></span><span class="sc-check__text">Кашель</span></label>
+                      <label class="sc-check"><input type="checkbox" data-complaint="Закладеність носа"><span class="sc-check__mark"></span><span class="sc-check__text">Закладеність носа</span></label>
+                    </div>
+                  </div>
+                  <div class="sc-category">
+                    <div class="sc-category__title">🤢 Шлунково-кишкові</div>
+                    <div class="sc-category__list">
+                      <label class="sc-check"><input type="checkbox" data-complaint="Нудота"><span class="sc-check__mark"></span><span class="sc-check__text">Нудота</span></label>
+                      <label class="sc-check"><input type="checkbox" data-complaint="Блювання"><span class="sc-check__mark"></span><span class="sc-check__text">Блювання</span></label>
+                      <label class="sc-check"><input type="checkbox" data-complaint="Біль у животі"><span class="sc-check__mark"></span><span class="sc-check__text">Біль у животі</span></label>
+                      <label class="sc-check"><input type="checkbox" data-complaint="Діарея"><span class="sc-check__mark"></span><span class="sc-check__text">Діарея</span></label>
+                    </div>
+                  </div>
+                  <div class="sc-category">
+                    <div class="sc-category__title">🤕 Травми</div>
+                    <div class="sc-category__list">
+                      <label class="sc-check"><input type="checkbox" data-complaint="Подряпина"><span class="sc-check__mark"></span><span class="sc-check__text">Подряпина</span></label>
+                      <label class="sc-check"><input type="checkbox" data-complaint="Садно"><span class="sc-check__mark"></span><span class="sc-check__text">Садно</span></label>
+                      <label class="sc-check"><input type="checkbox" data-complaint="Забій"><span class="sc-check__mark"></span><span class="sc-check__text">Забій</span></label>
+                      <label class="sc-check"><input type="checkbox" data-complaint="Розтягнення"><span class="sc-check__mark"></span><span class="sc-check__text">Розтягнення</span></label>
+                      <label class="sc-check"><input type="checkbox" data-complaint="Поріз"><span class="sc-check__mark"></span><span class="sc-check__text">Поріз</span></label>
+                      <label class="sc-check"><input type="checkbox" data-complaint="Травма"><span class="sc-check__mark"></span><span class="sc-check__text">Травма</span></label>
+                    </div>
+                  </div>
+                  <div class="sc-category">
+                    <div class="sc-category__title">🦟 Інше</div>
+                    <div class="sc-category__list">
+                      <label class="sc-check"><input type="checkbox" data-complaint="Укус комахи"><span class="sc-check__mark"></span><span class="sc-check__text">Укус комахи</span></label>
+                      <label class="sc-check"><input type="checkbox" data-complaint="Алергічна реакція"><span class="sc-check__mark"></span><span class="sc-check__text">Алергічна реакція</span></label>
+                      <label class="sc-check"><input type="checkbox" data-complaint="Біль у вусі"><span class="sc-check__mark"></span><span class="sc-check__text">Біль у вусі</span></label>
+                      <label class="sc-check"><input type="checkbox" data-complaint="Біль у зубі"><span class="sc-check__mark"></span><span class="sc-check__text">Біль у зубі</span></label>
+                      <label class="sc-check"><input type="checkbox" data-complaint="Почервоніння очей"><span class="sc-check__mark"></span><span class="sc-check__text">Почервоніння очей</span></label>
+                    </div>
+                    <div class="sc-category__other">
+                      <input type="text" id="complaintOther" class="input input--other" placeholder="Інше (вкажіть свій варіант)">
+                    </div>
+                  </div>
                 </div>
                 <div class="form__group form__group--full">
                   <label for="actionsDone" class="form__label">Надана допомога</label>
@@ -361,5 +416,5 @@
 
   </div><!-- /#mainApp -->
 
-  <script type="module" src="js/app.js?v=3"></script>
+  <script type="module" src="js/app.js?v=4"></script>
 </html>

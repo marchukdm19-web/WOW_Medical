@@ -13,6 +13,8 @@ import { getExaminations } from './api.js';
 const journalTabs = document.getElementById('journalTabs');
 const journalBody = document.getElementById('journalBody');
 const journalCount = document.getElementById('journalCount');
+const complaintStatsBody = document.getElementById('complaintStatsBody');
+const complaintStatsTotal = document.getElementById('complaintStatsTotal');
 
 /* ========================================
    Стан
@@ -50,6 +52,7 @@ async function loadJournal() {
     allRecords = [];
   }
   applyFilter(currentFilter);
+  buildComplaintStats(allRecords);
 }
 
 function applyFilter(filter) {
@@ -89,6 +92,85 @@ function applyFilter(filter) {
       <td>${exam.parentsNotified ? '<span class="data-table__badge data-table__badge--yes">Так</span>' : '<span class="data-table__badge data-table__badge--no">Ні</span>'}</td>
     </tr>`;
   }).join('');
+}
+
+function getTodayDateString() {
+  const now = new Date();
+  const yyyy = now.getFullYear();
+  const mm = String(now.getMonth() + 1).padStart(2, '0');
+  const dd = String(now.getDate()).padStart(2, '0');
+  return `${dd}.${mm}.${yyyy}`;
+}
+
+function buildComplaintStats(records) {
+  const todayStr = getTodayDateString();
+  const todayRecords = records.filter((r) => r.timestamp && r.timestamp.startsWith(todayStr));
+
+  // Count each suggested complaint across all today's records
+  const complaintCount = {};
+  let totalClicks = 0;
+
+  todayRecords.forEach((record) => {
+    const complaints = record.suggestedComplaints || [];
+    complaints.forEach((c) => {
+      if (!complaintCount[c]) complaintCount[c] = 0;
+      complaintCount[c]++;
+      totalClicks++;
+    });
+  });
+
+  // Sort by count descending
+  const sorted = Object.entries(complaintCount).sort((a, b) => b[1] - a[1]);
+
+  if (complaintStatsTotal) {
+    complaintStatsTotal.textContent = totalClicks;
+  }
+
+  if (!complaintStatsBody) return;
+
+  if (sorted.length === 0) {
+    complaintStatsBody.innerHTML = '<p class="data-table__empty">Сьогодні ще немає скарг 😊</p>';
+    return;
+  }
+
+  // Group by category for visual display
+  const categories = {
+    '🤒 Загальні': ['Головний біль', 'Підвищена температура', 'Слабкість', 'Запаморочення'],
+    '😷 Дихальні шляхи': ['Біль у горлі', 'Нежить', 'Кашель', 'Закладеність носа'],
+    '🤢 Шлунково-кишкові': ['Нудота', 'Блювання', 'Біль у животі', 'Діарея'],
+    '🤕 Травми': ['Подряпина', 'Садно', 'Забій', 'Розтягнення', 'Поріз', 'Травма'],
+    '🦟 Інше': ['Укус комахи', 'Алергічна реакція', 'Біль у вусі', 'Біль у зубі', 'Почервоніння очей']
+  };
+
+  let html = '';
+  for (const [catTitle, catComplaints] of Object.entries(categories)) {
+    const catItems = sorted.filter(([name]) => catComplaints.includes(name));
+    // Also include "other" (custom) items under Інше
+    const otherItems = catTitle === '🦟 Інше'
+      ? sorted.filter(([name]) => !Object.values(categories).flat().includes(name))
+      : [];
+
+    const allCatItems = [...catItems, ...otherItems];
+    if (allCatItems.length === 0) continue;
+
+    html += `<div class="cs-category">
+      <div class="cs-category__title">${catTitle}</div>
+      <div class="cs-category__items">`;
+    allCatItems.forEach(([name, count]) => {
+      const maxCount = sorted[0] ? sorted[0][1] : 1;
+      const barWidth = Math.round((count / maxCount) * 100);
+      html += `<div class="cs-item">
+        <span class="cs-item__name">${escapeHTML(name)}</span>
+        <div class="cs-item__bar">
+          <div class="cs-item__fill" style="width:${barWidth}%"></div>
+        </div>
+        <span class="cs-item__count">${count}</span>
+      </div>`;
+    });
+    html += `</div></div>`;
+  }
+
+  complaintStatsBody.innerHTML = html;
 }
 
 function escapeHTML(str) {

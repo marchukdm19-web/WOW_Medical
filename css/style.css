@@ -943,6 +943,180 @@ body {
   border-left-color: var(--color-accent);
 }
 
+/* === Suggested Complaints === */
+.suggested-complaints {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: -4px;
+  margin-bottom: 12px;
+}
+
+.sc-category {
+  flex: 1;
+  min-width: 200px;
+  background: #FAFBFC;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+}
+
+.sc-category__title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 8px;
+  letter-spacing: 0.2px;
+}
+
+.sc-category__list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sc-category__other {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--color-border);
+}
+
+.input--other {
+  font-size: 0.82rem !important;
+  padding: 7px 10px !important;
+  border-radius: var(--radius-sm) !important;
+}
+
+/* === SC Checkbox (compact checkboxes for complaints) === */
+.sc-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  cursor: pointer;
+  user-select: none;
+  padding: 3px 6px;
+  border-radius: 6px;
+  transition: background var(--transition);
+}
+
+.sc-check:hover {
+  background: rgba(74, 144, 217, 0.06);
+}
+
+.sc-check input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.sc-check__mark {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--color-border);
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all var(--transition);
+  background: #fff;
+}
+
+.sc-check input:checked + .sc-check__mark {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.sc-check input:checked + .sc-check__mark::after {
+  content: '';
+  width: 5px;
+  height: 9px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  margin-top: -2px;
+}
+
+.sc-check:hover .sc-check__mark {
+  border-color: var(--color-primary-light);
+}
+
+.sc-check__text {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+/* === Complaint Stats (Journal) === */
+.complaint-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.cs-category {
+  flex: 1;
+  min-width: 200px;
+  background: #FAFBFC;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+}
+
+.cs-category__title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 10px;
+  letter-spacing: 0.2px;
+}
+
+.cs-category__items {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cs-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cs-item__name {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--color-text);
+  min-width: 100px;
+  flex-shrink: 0;
+}
+
+.cs-item__bar {
+  flex: 1;
+  height: 8px;
+  background: #E8ECF0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.cs-item__fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-primary-light));
+  border-radius: 4px;
+  transition: width 0.5s ease;
+  min-width: 4px;
+}
+
+.cs-item__count {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  min-width: 24px;
+  text-align: right;
+}
+
 /* ============================================
    Responsive
    ============================================ */

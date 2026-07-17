@@ -240,11 +240,31 @@ function debounceSearch() {
    Форма → Збереження в medical_records
    ======================================== */
 
+function collectComplaints() {
+  const checkboxes = document.querySelectorAll('#suggestedComplaints input[type="checkbox"][data-complaint]:checked');
+  const selected = Array.from(checkboxes).map((cb) => cb.dataset.complaint);
+  const otherInput = document.getElementById('complaintOther');
+  if (otherInput && otherInput.value.trim()) {
+    selected.push(otherInput.value.trim());
+  }
+  return selected;
+}
+
 function collectFormData() {
+  const suggestedComplaints = collectComplaints();
+  const freeText = fieldComplaints.value.trim();
+  // Combine suggested complaints + free text
+  const allComplaints = [...suggestedComplaints];
+  if (freeText && !suggestedComplaints.includes(freeText)) {
+    allComplaints.push(freeText);
+  }
+  const complaintsStr = allComplaints.join('; ');
+
   return {
     childId: selectedChild ? (selectedChild.id || null) : null,
     childName: fieldFullName.value.trim(),
-    complaints: fieldComplaints.value.trim(),
+    complaints: complaintsStr,
+    suggestedComplaints: suggestedComplaints,
     temperature: fieldTemperature.value.trim(),
     actionsDone: fieldActionsDone.value.trim(),
     prescriptions: fieldPrescriptions.value.trim(),
@@ -282,8 +302,16 @@ async function handleSubmit(event) {
   }
 }
 
+function resetComplaints() {
+  const checkboxes = document.querySelectorAll('#suggestedComplaints input[type="checkbox"][data-complaint]');
+  checkboxes.forEach((cb) => { cb.checked = false; });
+  const otherInput = document.getElementById('complaintOther');
+  if (otherInput) otherInput.value = '';
+}
+
 function resetForm() {
   form.reset();
+  resetComplaints();
   selectedChild = null;
   searchInput.value = '';
   fieldFullName.value = '';
