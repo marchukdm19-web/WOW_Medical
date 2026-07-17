@@ -830,6 +830,110 @@ body {
   text-overflow: ellipsis;
 }
 
+/* === Startup Complaint Stats === */
+.startup-complaint-stats {
+  max-width: 520px;
+  margin: 0 auto 16px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(8px);
+  border-radius: 16px;
+  border: 1px solid rgba(225, 232, 237, 0.7);
+  overflow: hidden;
+}
+
+.scs-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: rgba(74, 144, 217, 0.06);
+  border-bottom: 1px solid rgba(225, 232, 237, 0.6);
+}
+
+.scs-header__icon {
+  font-size: 1.1rem;
+}
+
+.scs-header__title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-text);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.scs-header__toggle {
+  margin-left: auto;
+  display: flex;
+  background: #EEF2F7;
+  border-radius: 8px;
+  padding: 3px;
+  gap: 2px;
+}
+
+.scs-toggle-btn {
+  padding: 4px 12px;
+  border: none;
+  background: transparent;
+  font-family: var(--font-family);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+
+.scs-toggle-btn--active {
+  background: #fff;
+  color: var(--color-primary);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.scs-toggle-btn:hover:not(.scs-toggle-btn--active) {
+  color: var(--color-text);
+}
+
+.scs-body {
+  padding: 12px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.scs-empty {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  flex-basis: 100%;
+  text-align: center;
+  padding: 8px 0;
+}
+
+.scs-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  background: rgba(74, 144, 217, 0.08);
+  border-radius: 100px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  white-space: nowrap;
+  transition: all var(--transition);
+}
+
+.scs-tag--hot {
+  background: rgba(255, 107, 107, 0.1);
+  color: #E74C3C;
+}
+
+.scs-tag__count {
+  font-weight: 800;
+  opacity: 0.75;
+}
+
 /* === Startup Screen Journal Button === */
 .startup-screen__buttons--journal {
   margin-top: 0;

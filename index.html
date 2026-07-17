@@ -87,6 +87,21 @@
           </div>
         </div>
       </div>
+      <!-- Статистика скарг за день -->
+      <div class="startup-complaint-stats" id="startupComplaintStats">
+        <div class="scs-header">
+          <span class="scs-header__icon">📊</span>
+          <span class="scs-header__title">Статистика скарг</span>
+          <div class="scs-header__toggle" id="scsToggle">
+            <button type="button" class="scs-toggle-btn scs-toggle-btn--active" data-day="today">Сьогодні</button>
+            <button type="button" class="scs-toggle-btn" data-day="yesterday">Вчора</button>
+          </div>
+        </div>
+        <div class="scs-body" id="scsBody">
+          <span class="scs-empty">Завантаження...</span>
+        </div>
+      </div>
+
       <div class="startup-screen__buttons">
         <button class="startup-btn startup-btn--white" id="startupWhite">
           <span class="startup-btn__icon">
@@ -416,5 +431,5 @@
 
   </div><!-- /#mainApp -->
 
-  <script type="module" src="js/app.js?v=4"></script>
+  <script type="module" src="js/app.js?v=5"></script>
 </html>

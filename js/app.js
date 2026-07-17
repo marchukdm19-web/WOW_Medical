@@ -366,12 +366,64 @@ function getTodayDateString() {
   return `${dd}.${mm}.${yyyy}`;
 }
 
+function getYesterdayDateString() {
+  const now = new Date();
+  now.setDate(now.getDate() - 1);
+  const yyyy = now.getFullYear();
+  const mm = String(now.getMonth() + 1).padStart(2, '0');
+  const dd = String(now.getDate()).padStart(2, '0');
+  return `${dd}.${mm}.${yyyy}`;
+}
+
 function getTimeString(date) {
   if (!date || !date.toDate) return '';
   const d = date.toDate();
   const hh = String(d.getHours()).padStart(2, '0');
   const min = String(d.getMinutes()).padStart(2, '0');
   return `${hh}:${min}`;
+}
+
+let allStartupRecords = [];
+let startupComplaintsDay = 'today';
+
+function buildStartupComplaintStats() {
+  const scsBody = document.getElementById('scsBody');
+  if (!scsBody) return;
+
+  const dateStr = startupComplaintsDay === 'yesterday' ? getYesterdayDateString() : getTodayDateString();
+
+  const dayRecords = allStartupRecords.filter((r) => r.timestamp && r.timestamp.startsWith(dateStr));
+
+  const complaintCount = {};
+  dayRecords.forEach((record) => {
+    const complaints = record.suggestedComplaints || [];
+    complaints.forEach((c) => {
+      if (!complaintCount[c]) complaintCount[c] = 0;
+      complaintCount[c]++;
+    });
+  });
+
+  const sorted = Object.entries(complaintCount).sort((a, b) => b[1] - a[1]);
+
+  if (sorted.length === 0) {
+    scsBody.innerHTML = '<span class="scs-empty">Немає даних за цей день 😊</span>';
+    return;
+  }
+
+  const maxCount = sorted[0][1];
+  scsBody.innerHTML = sorted.map(([name, count]) => {
+    const hot = count >= maxCount && count >= 3 ? ' scs-tag--hot' : '';
+    return `<span class="scs-tag${hot}">${escapeHTML(name)}<span class="scs-tag__count">×${count}</span></span>`;
+  }).join('');
+}
+
+function setStartupComplaintsDay(day) {
+  startupComplaintsDay = day;
+  const toggleBtns = document.querySelectorAll('#scsToggle .scs-toggle-btn');
+  toggleBtns.forEach((btn) => {
+    btn.classList.toggle('scs-toggle-btn--active', btn.dataset.day === day);
+  });
+  buildStartupComplaintStats();
 }
 
 async function loadStartupStats() {
@@ -437,6 +489,10 @@ async function loadStartupStats() {
     if (statFeverToday) statFeverToday.textContent = feverToday;
 
     if (statTotalChildren) statTotalChildren.textContent = uniqueChildren.size;
+
+    // Зберігаємо для статистики скарг
+    allStartupRecords = allRecords;
+    buildStartupComplaintStats();
   } catch (error) {
     console.warn('[App] Не вдалося завантажити статистику:', error);
   }
@@ -570,6 +626,16 @@ async function init() {
       if (!phone || phone === '—') return;
       copyToClipboard(phone);
       showToast('Номер скопійовано!', 'success');
+    });
+  }
+
+  // Тогл статистики скарг (сьогодні / вчора)
+  const scsToggle = document.getElementById('scsToggle');
+  if (scsToggle) {
+    scsToggle.addEventListener('click', (e) => {
+      const btn = e.target.closest('.scs-toggle-btn');
+      if (!btn) return;
+      setStartupComplaintsDay(btn.dataset.day);
     });
   }
 
