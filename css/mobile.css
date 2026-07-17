@@ -685,4 +685,241 @@
     width: 16px;
     height: 16px;
   }
+
+  /* === Suggested Complaints === */
+  .suggested-complaints {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .sc-category {
+    min-width: auto;
+    padding: 8px 10px;
+  }
+
+  .sc-category__title {
+    font-size: 0.72rem;
+    margin-bottom: 6px;
+  }
+
+  .sc-check__text {
+    font-size: 0.7rem;
+  }
+
+  .sc-check {
+    padding: 2px 4px;
+  }
+
+  .sc-check__mark {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+  }
+
+  .input--other {
+    font-size: 0.72rem !important;
+    padding: 6px 8px !important;
+  }
+}
+
+/* === 360px — Compact phone fixes === */
+@media (max-width: 360px) {
+  .startup-complaint-stats {
+    margin-left: 0;
+    margin-right: 0;
+    border-radius: 12px;
+  }
+
+  .scs-columns {
+    flex-direction: column;
+  }
+
+  .scs-col--black {
+    border-left: none;
+    border-top: 1px solid rgba(225, 232, 237, 0.6);
+  }
+
+  .scs-col__header {
+    font-size: 0.62rem;
+    padding: 6px 10px;
+  }
+
+  .scs-body {
+    padding: 6px 8px;
+    gap: 3px;
+  }
+
+  .scs-table {
+    font-size: 0.68rem;
+  }
+
+  .scs-table__num {
+    width: 14px;
+    padding: 2px 1px 2px 2px;
+    font-size: 0.58rem;
+  }
+
+  .scs-table__icon {
+    width: 16px;
+    font-size: 0.68rem;
+  }
+
+  .scs-table__name {
+    font-size: 0.68rem;
+    padding: 2px 2px;
+  }
+
+  .scs-table__bar {
+    height: 4px;
+    min-width: 20px;
+  }
+
+  .scs-table__cnt {
+    width: 16px;
+    font-size: 0.65rem;
+    padding: 2px 4px 2px 2px;
+  }
+
+  .scs-header {
+    padding: 8px 10px;
+    gap: 4px;
+  }
+
+  .scs-header__title {
+    font-size: 0.7rem;
+  }
+
+  .scs-toggle-btn {
+    padding: 3px 8px;
+    font-size: 0.65rem;
+  }
+
+  /* Complaint stats journal tables */
+  .cs-table {
+    min-width: auto;
+    width: 100%;
+    font-size: 0.72rem;
+  }
+
+  .cs-table__cat {
+    padding: 6px 10px;
+    font-size: 0.68rem;
+  }
+
+  .cs-table__num {
+    width: 22px;
+    padding: 4px 2px 4px 6px;
+    font-size: 0.6rem;
+  }
+
+  .cs-table__icon {
+    width: 16px;
+    font-size: 0.7rem;
+  }
+
+  .cs-table__name {
+    padding: 4px 4px;
+    font-size: 0.68rem;
+  }
+
+  .cs-table__bar-cell {
+    padding: 4px 4px;
+  }
+
+  .cs-table__bar {
+    height: 4px;
+    min-width: 24px;
+  }
+
+  .cs-table__count {
+    width: 22px;
+    padding: 4px 6px 4px 2px;
+    font-size: 0.7rem;
+  }
+
+  .complaint-stats {
+    gap: 8px;
+  }
+
+  /* Admin delete button */
+  .btn-delete-record {
+    width: 28px;
+    height: 28px;
+    font-size: 0.85rem;
+  }
+
+  .data-table__actions-th {
+    width: 28px;
+  }
+
+  .data-table__actions {
+    padding: 2px !important;
+  }
+
+  /* Header */
+  .badge {
+    font-size: 0.7rem;
+    padding: 5px 10px;
+  }
+
+  .header__change-btn {
+    padding: 4px 8px;
+    font-size: 0.7rem;
+  }
+
+  .header__change-text {
+    display: none;
+  }
+
+  .nav-link {
+    font-size: 0.75rem;
+  }
+
+  /* Form labels */
+  .form__label {
+    font-size: 0.78rem;
+  }
+
+  /* Toast smaller */
+  .toast {
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+    padding: 10px 14px;
+    font-size: 0.76rem;
+  }
+
+  /* Card count */
+  .card__count {
+    font-size: 0.68rem;
+    padding: 2px 8px;
+  }
+
+  /* Data table on small phone */
+  .data-table th,
+  .data-table td {
+    padding: 6px 6px;
+    font-size: 0.68rem;
+  }
+
+  .data-table__empty {
+    padding: 24px 8px !important;
+    font-size: 0.74rem !important;
+  }
+
+  .data-table__mp-badge,
+  .data-table__badge {
+    font-size: 0.65rem;
+    padding: 2px 6px;
+  }
+
+  /* Journal tabs */
+  .journal-tab {
+    font-size: 0.68rem;
+    padding: 7px 8px;
+  }
+
+  .journal-tabs {
+    padding: 2px;
+  }
 }
