@@ -408,11 +408,32 @@ function buildComplaintTagsForStation(records, dateStr, station) {
     return '<span class="scs-empty">Немає даних 😊</span>';
   }
 
+  // Icons map (same as journal)
+  const icons = {
+    'Головний біль': '🤕', 'Підвищена температура': '🌡️', 'Слабкість': '😴', 'Запаморочення': '💫',
+    'Біль у горлі': '🗣️', 'Нежить': '🤧', 'Кашель': '😮‍💨', 'Закладеність носа': '👃',
+    'Нудота': '🤢', 'Блювання': '🤮', 'Біль у животі': '😖', 'Діарея': '💧',
+    'Подряпина': '🩹', 'Садно': '🩹', 'Забій': '💢', 'Розтягнення': '🦵', 'Поріз': '🔪', 'Травма': '🤕',
+    'Укус комахи': '🦟', 'Алергічна реакція': '🤧', 'Біль у вусі': '👂', 'Біль у зубі': '🦷', 'Почервоніння очей': '👁️'
+  };
+
   const maxCount = sorted[0][1];
-  return sorted.map(([name, count]) => {
-    const hot = count >= maxCount && count >= 3 ? ' scs-tag--hot' : '';
-    return `<span class="scs-tag${hot}">${escapeHTML(name)}<span class="scs-tag__count">×${count}</span></span>`;
-  }).join('');
+  let html = '<table class="scs-table"><tbody>';
+  sorted.forEach(([name, count], idx) => {
+    const barW = Math.round((count / maxCount) * 100);
+    const icon = icons[name] || '📋';
+    html += `<tr>
+      <td class="scs-table__num">${idx + 1}</td>
+      <td class="scs-table__icon">${icon}</td>
+      <td class="scs-table__name">${escapeHTML(name)}</td>
+      <td class="scs-table__bar-cell">
+        <div class="scs-table__bar"><div class="scs-table__fill" style="width:${barW}%"></div></div>
+      </td>
+      <td class="scs-table__cnt">${count}</td>
+    </tr>`;
+  });
+  html += '</tbody></table>';
+  return html;
 }
 
 function buildStartupComplaintStats() {
