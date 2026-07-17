@@ -386,13 +386,12 @@ function getTimeString(date) {
 let allStartupRecords = [];
 let startupComplaintsDay = 'today';
 
-function buildStartupComplaintStats() {
-  const scsBody = document.getElementById('scsBody');
-  if (!scsBody) return;
-
-  const dateStr = startupComplaintsDay === 'yesterday' ? getYesterdayDateString() : getTodayDateString();
-
-  const dayRecords = allStartupRecords.filter((r) => r.timestamp && r.timestamp.startsWith(dateStr));
+function buildComplaintTagsForStation(records, dateStr, station) {
+  const dayRecords = records.filter((r) => {
+    if (!r.timestamp || !r.timestamp.startsWith(dateStr)) return false;
+    const mp = r.medicalStation || 'white';
+    return mp === station;
+  });
 
   const complaintCount = {};
   dayRecords.forEach((record) => {
@@ -406,15 +405,29 @@ function buildStartupComplaintStats() {
   const sorted = Object.entries(complaintCount).sort((a, b) => b[1] - a[1]);
 
   if (sorted.length === 0) {
-    scsBody.innerHTML = '<span class="scs-empty">Немає даних за цей день 😊</span>';
-    return;
+    return '<span class="scs-empty">Немає даних 😊</span>';
   }
 
   const maxCount = sorted[0][1];
-  scsBody.innerHTML = sorted.map(([name, count]) => {
+  return sorted.map(([name, count]) => {
     const hot = count >= maxCount && count >= 3 ? ' scs-tag--hot' : '';
     return `<span class="scs-tag${hot}">${escapeHTML(name)}<span class="scs-tag__count">×${count}</span></span>`;
   }).join('');
+}
+
+function buildStartupComplaintStats() {
+  const bodyWhite = document.getElementById('scsBodyWhite');
+  const bodyBlack = document.getElementById('scsBodyBlack');
+  if (!bodyWhite && !bodyBlack) return;
+
+  const dateStr = startupComplaintsDay === 'yesterday' ? getYesterdayDateString() : getTodayDateString();
+
+  if (bodyWhite) {
+    bodyWhite.innerHTML = buildComplaintTagsForStation(allStartupRecords, dateStr, 'white');
+  }
+  if (bodyBlack) {
+    bodyBlack.innerHTML = buildComplaintTagsForStation(allStartupRecords, dateStr, 'black');
+  }
 }
 
 function setStartupComplaintsDay(day) {
