@@ -229,41 +229,61 @@ function renderJournal() {
 function exportJournalToExcel() {
   if (currentExaminations.length === 0) { showStatus('❌ Немає записів для експорту', 'error'); return; }
 
-  const colWidths = [{ wch: 4 }, { wch: 22 }, { wch: 14 }, { wch: 30 }, { wch: 14 }, { wch: 40 }, { wch: 40 }, { wch: 40 }, { wch: 25 }, { wch: 16 }];
+  const now = new Date();
+  const dateStr = `${String(now.getDate()).padStart(2,'0')}.${String(now.getMonth()+1).padStart(2,'0')}.${now.getFullYear()}`;
 
-  function buildSheet(records, stationLabel) {
-    const data = records.map((exam) => ({
-      '№': null,
-      'Дата / Час': exam.timestamp || '',
-      'Медпункт': stationLabel,
-      'ПІБ дитини': exam.childName || '',
-      'Температура (°C)': exam.temperature || '',
-      'Скарги': exam.complaints || '',
-      'Надана допомога': exam.actionsDone || '',
-      'Призначення': exam.prescriptions || '',
-      'Лікар': exam.doctorName || '',
-      'Повідомлено батьків': exam.parentsNotified ? 'Так' : 'Ні'
-    }));
-    data.forEach((row, i) => row['№'] = i + 1);
-    const ws = XLSX.utils.json_to_sheet(data);
-    ws['!cols'] = colWidths;
-    return ws;
-  }
+  const headers = ['№', 'Дата / Час', 'Медпункт', 'ПІБ дитини', 't°C', 'Скарги', 'Надана допомога', 'Призначення', 'Лікар', 'Повідомлено батьків'];
+  const colWidths = [{ wch: 4 }, { wch: 22 }, { wch: 14 }, { wch: 30 }, { wch: 10 }, { wch: 40 }, { wch: 40 }, { wch: 40 }, { wch: 25 }, { wch: 18 }];
 
-  // Гарантуємо хронологічний порядок (найновіші перші) у вивантаженні
+  // Гарантуємо хронологічний порядок (найновіші перші)
   const sorted = [...currentExaminations].sort((a, b) => {
     const timeA = a.createdAt && a.createdAt.toDate ? a.createdAt.toDate().getTime() : 0;
     const timeB = b.createdAt && b.createdAt.toDate ? b.createdAt.toDate().getTime() : 0;
     return timeB - timeA;
   });
+
+  function buildSheet(records, stationLabel) {
+    // Build rows: title, date, empty, headers, data
+    const rows = [];
+    rows.push([`WOW Medical — Журнал медичних оглядів (${stationLabel} медпункт)`]);
+    rows.push([`Дата вивантаження: ${dateStr}  |  Кількість записів: ${records.length}`]);
+    rows.push([]);
+    rows.push(headers);
+
+    records.forEach((exam, i) => {
+      rows.push([
+        i + 1,
+        exam.timestamp || '',
+        stationLabel,
+        exam.childName || '',
+        exam.temperature || '',
+        exam.complaints || '',
+        exam.actionsDone || '',
+        exam.prescriptions || '',
+        exam.doctorName || '',
+        exam.parentsNotified ? 'Так' : 'Ні'
+      ]);
+    });
+
+    const ws = XLSX.utils.aoa_to_sheet(rows);
+    ws['!cols'] = colWidths;
+
+    // Merge title row across all columns
+    ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: headers.length - 1 } }, { s: { r: 1, c: 0 }, e: { r: 1, c: headers.length - 1 } }];
+
+    // Auto-filter on header row (row index 3 = 4th row)
+    ws['!autofilter'] = { ref: XLSX.utils.encode_range({ s: { r: 3, c: 0 }, e: { r: 3 + records.length, c: headers.length - 1 } }) };
+
+    return ws;
+  }
+
   const whiteRecords = sorted.filter((e) => e.medicalStation !== 'black');
   const blackRecords = sorted.filter((e) => e.medicalStation === 'black');
 
   const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, buildSheet(whiteRecords, 'Білий'), 'Білий медпункт');
-  XLSX.utils.book_append_sheet(wb, buildSheet(blackRecords, 'Чорний'), 'Чорний медпункт');
+  if (whiteRecords.length > 0) XLSX.utils.book_append_sheet(wb, buildSheet(whiteRecords, 'Білий'), 'Білий медпункт');
+  if (blackRecords.length > 0) XLSX.utils.book_append_sheet(wb, buildSheet(blackRecords, 'Чорний'), 'Чорний медпункт');
 
-  const now = new Date();
   const fileName = `WOW_Medical_Журнал_${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}.xlsx`;
   XLSX.writeFile(wb, fileName);
   showStatus('✅ Вивантажено: ' + fileName, 'success');
