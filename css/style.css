@@ -115,8 +115,6 @@ body {
 }
 
 .logo__icon {
-  width: 48px;
-  height: 48px;
   flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -124,8 +122,10 @@ body {
 }
 
 .logo__icon img {
-  width: 100%;
-  height: 100%;
+  max-height: 42px;
+  width: auto;
+  height: auto;
+  max-width: 110px;
   object-fit: contain;
   filter: drop-shadow(0 4px 12px rgba(39, 174, 96, 0.2));
 }
@@ -1722,8 +1722,11 @@ body {
   }
 
   .logo__icon {
-    width: 40px;
-    height: 40px;
+    width: auto;
+    height: auto;
+  }
+  .logo__icon img {
+    max-height: 36px;
   }
 
   .logo__brand {
@@ -1804,8 +1807,11 @@ body {
   }
 
   .logo__icon {
-    width: 36px;
-    height: 36px;
+    width: auto;
+    height: auto;
+  }
+  .logo__icon img {
+    max-height: 32px;
   }
 
   .logo__brand {
