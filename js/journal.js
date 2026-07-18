@@ -111,12 +111,20 @@ function buildComplaintStats(records) {
 
   todayRecords.forEach((record) => {
     const complaints = record.suggestedComplaints || [];
+    const childName = (record.childName || '').trim().toLowerCase();
     complaints.forEach((c) => {
-      if (!complaintCount[c]) complaintCount[c] = 0;
-      complaintCount[c]++;
+      if (!complaintCount[c]) complaintCount[c] = new Set();
+      if (childName) complaintCount[c].add(childName);
       totalClicks++;
     });
   });
+
+  // Convert Sets to unique counts per complaint
+  const complaintUnique = {};
+  for (const [key, set] of Object.entries(complaintCount)) {
+    complaintUnique[key] = set.size;
+  }
+  const complaintCountMap = complaintUnique;
 
   if (complaintStatsTotal) {
     complaintStatsTotal.textContent = totalClicks;
@@ -124,7 +132,7 @@ function buildComplaintStats(records) {
 
   if (!complaintStatsBody) return;
 
-  if (Object.keys(complaintCount).length === 0) {
+  if (Object.keys(complaintCountMap).length === 0) {
     complaintStatsBody.innerHTML = '<p class="data-table__empty">Сьогодні ще немає скарг 😊</p>';
     return;
   }
@@ -150,9 +158,9 @@ function buildComplaintStats(records) {
   let globalIdx = 0;
 
   for (const [catTitle, catComplaints] of Object.entries(categories)) {
-    const catItems = Object.entries(complaintCount).filter(([name]) => catComplaints.includes(name));
+    const catItems = Object.entries(complaintCountMap).filter(([name]) => catComplaints.includes(name));
     const otherItems = catTitle === '🦟 Інше'
-      ? Object.entries(complaintCount).filter(([name]) => !Object.values(categories).flat().includes(name))
+      ? Object.entries(complaintCountMap).filter(([name]) => !Object.values(categories).flat().includes(name))
       : [];
     const allCatItems = [...catItems, ...otherItems].sort((a, b) => b[1] - a[1]);
     if (allCatItems.length === 0) continue;
@@ -163,7 +171,7 @@ function buildComplaintStats(records) {
 
     allCatItems.forEach(([name, count]) => {
       globalIdx++;
-      const maxCount = Math.max(...Object.values(complaintCount), 1);
+      const maxCount = Math.max(...Object.values(complaintCountMap), 1);
       const barW = Math.round((count / maxCount) * 100);
       const icon = complaintIcons[name] || '📋';
       html += `<tr>

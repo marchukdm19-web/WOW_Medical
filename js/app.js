@@ -396,13 +396,20 @@ function buildComplaintTagsForStation(records, dateStr, station) {
   const complaintCount = {};
   dayRecords.forEach((record) => {
     const complaints = record.suggestedComplaints || [];
+    const childName = (record.childName || '').trim().toLowerCase();
     complaints.forEach((c) => {
-      if (!complaintCount[c]) complaintCount[c] = 0;
-      complaintCount[c]++;
+      if (!complaintCount[c]) complaintCount[c] = new Set();
+      if (childName) complaintCount[c].add(childName);
     });
   });
+  // Convert Sets to counts (unique children)
+  const complaintUnique = {};
+  for (const [key, set] of Object.entries(complaintCount)) {
+    complaintUnique[key] = set.size;
+  }
+  const complaintCountFinal = complaintUnique;
 
-  const sorted = Object.entries(complaintCount).sort((a, b) => b[1] - a[1]);
+  const sorted = Object.entries(complaintCountFinal).sort((a, b) => b[1] - a[1]);
 
   if (sorted.length === 0) {
     return '<span class="scs-empty">Немає даних 😊</span>';
