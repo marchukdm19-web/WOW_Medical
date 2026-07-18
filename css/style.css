@@ -162,14 +162,14 @@ body {
   display: inline-flex;
   align-items: center;
   padding: 7px 16px;
-  background: var(--color-primary);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
   color: #fff;
   font-size: 0.8rem;
   font-weight: 700;
   border-radius: 100px;
   letter-spacing: 0.03em;
   white-space: nowrap;
-  box-shadow: 0 2px 8px rgba(39, 174, 96, 0.25);
+  box-shadow: 0 2px 8px rgba(39, 174, 96, 0.3);
 }
 
 /* === Main === */
@@ -465,13 +465,13 @@ body {
 }
 
 .btn--primary {
-  background: var(--color-primary);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
   color: #fff;
   box-shadow: 0 2px 8px rgba(39, 174, 96, 0.3);
 }
 
 .btn--primary:hover {
-  background: var(--color-primary-dark);
+  background: linear-gradient(135deg, var(--color-primary-dark), var(--color-primary));
   box-shadow: 0 4px 16px rgba(39, 174, 96, 0.4);
   transform: translateY(-1px);
 }
@@ -515,7 +515,10 @@ body {
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--color-primary);
+  background: linear-gradient(135deg, var(--color-primary-dark), var(--color-primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin: 24px 0 14px;
   padding-bottom: 10px;
   border-bottom: 2px solid var(--color-primary-bg);
@@ -796,7 +799,7 @@ body {
 }
 
 .startup-stat__dot--white {
-  background: var(--color-primary);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
   box-shadow: 0 0 0 4px rgba(39, 174, 96, 0.12);
 }
 
@@ -812,7 +815,7 @@ body {
   width: 26px;
   height: 26px;
   border-radius: 8px;
-  background: var(--color-primary);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
   color: #fff;
   box-shadow: 0 2px 8px rgba(39, 174, 96, 0.2);
 }
@@ -1132,7 +1135,7 @@ body {
 
 .scs-table__fill {
   height: 100%;
-  background: var(--color-primary);
+  background: linear-gradient(90deg, var(--color-primary), var(--color-primary-light));
   border-radius: 3px;
   transition: width 0.5s ease;
   min-width: 2px;
