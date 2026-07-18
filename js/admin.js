@@ -250,8 +250,14 @@ function exportJournalToExcel() {
     return ws;
   }
 
-  const whiteRecords = currentExaminations.filter((e) => e.medicalStation !== 'black');
-  const blackRecords = currentExaminations.filter((e) => e.medicalStation === 'black');
+  // Гарантуємо хронологічний порядок (найновіші перші) у вивантаженні
+  const sorted = [...currentExaminations].sort((a, b) => {
+    const timeA = a.createdAt && a.createdAt.toDate ? a.createdAt.toDate().getTime() : 0;
+    const timeB = b.createdAt && b.createdAt.toDate ? b.createdAt.toDate().getTime() : 0;
+    return timeB - timeA;
+  });
+  const whiteRecords = sorted.filter((e) => e.medicalStation !== 'black');
+  const blackRecords = sorted.filter((e) => e.medicalStation === 'black');
 
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, buildSheet(whiteRecords, 'Білий'), 'Білий медпункт');
