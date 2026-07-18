@@ -767,6 +767,8 @@
   .scs-table__name {
     font-size: 0.68rem;
     padding: 2px 2px;
+    white-space: normal;
+    word-break: break-word;
   }
 
   .scs-table__bar {
