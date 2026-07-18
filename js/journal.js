@@ -44,7 +44,7 @@ async function loadJournal() {
     allRecords.sort((a, b) => {
       const timeA = a.createdAt && a.createdAt.toDate ? a.createdAt.toDate().getTime() : 0;
       const timeB = b.createdAt && b.createdAt.toDate ? b.createdAt.toDate().getTime() : 0;
-      return timeA - timeB;
+      return timeB - timeA;
     });
     console.log(`[Journal] Завантажено ${allRecords.length} записів`);
   } catch (error) {

@@ -140,6 +140,13 @@ async function loadJournal() {
     currentExaminations.forEach(function(exam) {
       if (!exam.medicalStation) exam.medicalStation = 'white';
     });
+
+    // Сортуємо від найновіших до найстаріших
+    currentExaminations.sort((a, b) => {
+      const timeA = a.createdAt && a.createdAt.toDate ? a.createdAt.toDate().getTime() : 0;
+      const timeB = b.createdAt && b.createdAt.toDate ? b.createdAt.toDate().getTime() : 0;
+      return timeB - timeA;
+    });
   } catch {
     currentExaminations = [];
   }
