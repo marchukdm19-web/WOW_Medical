@@ -122,12 +122,15 @@ body {
 }
 
 .logo__icon img {
-  max-height: 42px;
-  width: auto;
   height: auto;
-  max-width: 110px;
+  width: auto;
   object-fit: contain;
   filter: drop-shadow(0 4px 12px rgba(39, 174, 96, 0.2));
+}
+
+.logo__icon--lg img {
+  max-height: 80px;
+  max-width: 200px;
 }
 
 .logo__icon svg {
@@ -1721,12 +1724,9 @@ body {
     padding: 12px 0;
   }
 
-  .logo__icon {
-    width: auto;
-    height: auto;
-  }
   .logo__icon img {
-    max-height: 36px;
+    max-width: 90px;
+    max-height: 34px;
   }
 
   .logo__brand {
@@ -1806,12 +1806,9 @@ body {
     gap: 10px;
   }
 
-  .logo__icon {
-    width: auto;
-    height: auto;
-  }
   .logo__icon img {
-    max-height: 32px;
+    max-width: 80px;
+    max-height: 30px;
   }
 
   .logo__brand {
