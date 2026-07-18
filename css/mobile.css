@@ -1,5 +1,5 @@
 /* ============================================
-   WOW Medical — Mobile Responsive
+   WOW Medical — Premium Mobile Responsive
    Адаптація для екранів 320px – 768px
    Підключається останнім
    ============================================ */
@@ -12,7 +12,7 @@
 
   .header__inner {
     flex-wrap: wrap;
-    gap: 12px;
+    gap: 10px;
     padding: 12px 0;
   }
 
@@ -23,42 +23,40 @@
   }
 
   .logo__icon {
-    width: 44px;
-    height: 44px;
+    width: 40px;
+    height: 40px;
   }
 
   .logo__brand {
-    font-size: 1.4rem;
+    font-size: 1.35rem;
   }
 
   .hero__title {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
   }
 
   .hero {
     padding: 20px 0 28px;
   }
 
-  /* Stats grid: 2 columns → wraps */
   .stats-grid {
     grid-template-columns: 1fr !important;
-    gap: 14px;
+    gap: 12px;
   }
 
   .stats-card {
-    padding: 20px;
+    padding: 22px;
   }
 
   .stats-card__icon {
-    width: 48px;
-    height: 48px;
+    width: 46px;
+    height: 46px;
   }
 
   .stats-card__value {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
   }
 
-  /* Search */
   .search-box {
     flex-direction: column;
   }
@@ -67,15 +65,14 @@
     width: 100%;
   }
 
-  /* Form */
   .form__grid {
     grid-template-columns: 1fr;
-    gap: 16px;
+    gap: 14px;
   }
 
   .form__actions {
     flex-direction: column;
-    gap: 16px;
+    gap: 14px;
     align-items: stretch;
   }
 
@@ -84,7 +81,6 @@
     justify-content: center;
   }
 
-  /* Medical point selector */
   .medical-point-selector {
     flex-direction: column;
   }
@@ -93,50 +89,50 @@
     width: 100%;
   }
 
-  /* Startup screen — mobile adaptation */
+  /* Startup screen */
   .startup-screen {
     align-items: flex-start;
-    padding-top: 10vh;
+    padding: 40px 16px 30px;
   }
 
   .startup-screen::before {
-    top: -160px;
-    right: -120px;
-    width: 240px;
-    height: 240px;
+    top: -140px;
+    right: -100px;
+    width: 220px;
+    height: 220px;
   }
 
   .startup-screen::after {
-    bottom: -140px;
-    left: -100px;
-    width: 200px;
-    height: 200px;
+    bottom: -120px;
+    left: -80px;
+    width: 180px;
+    height: 180px;
   }
 
   .startup-screen__inner {
-    padding: 20px 16px 36px;
+    padding: 20px 12px 36px;
   }
 
   .startup-screen__logo {
-    margin-bottom: 18px;
+    margin-bottom: 20px;
   }
 
   .startup-screen__logo .logo__icon {
-    width: 44px;
-    height: 44px;
+    width: 40px;
+    height: 40px;
   }
 
   .startup-screen__logo .logo__brand {
-    font-size: 1.45rem;
+    font-size: 1.4rem;
   }
 
   .startup-screen__title {
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     margin-bottom: 4px;
   }
 
   .startup-screen__subtitle {
-    font-size: 0.82rem;
+    font-size: 0.8rem;
     margin-bottom: 24px;
     padding: 0 8px;
   }
@@ -144,7 +140,7 @@
   .startup-screen__buttons {
     flex-direction: column;
     align-items: center;
-    gap: 14px;
+    gap: 12px;
     margin-top: 20px;
   }
 
@@ -153,23 +149,22 @@
     width: 100%;
     padding: 22px 18px;
     gap: 12px;
-    border-radius: 20px;
+    border-radius: 18px;
   }
 
   .startup-btn__icon svg {
-    width: 32px;
-    height: 32px;
+    width: 30px;
+    height: 30px;
   }
 
   .startup-btn__label {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
   }
 
-  /* Startup stats — колонка на мобільних */
   .startup-screen__stats {
     flex-direction: column;
     gap: 8px;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
   }
 
   .startup-stat {
@@ -178,15 +173,16 @@
   }
 
   .startup-stat__value {
-    font-size: 1.1rem;
+    font-size: 1.05rem;
   }
 
-  .startup-stat--total .startup-stat__value {
-    font-size: 1.2rem;
+  .startup-stat--total .startup-stat__value,
+  .startup-stat--fever .startup-stat__value {
+    font-size: 1.15rem;
   }
 
   .startup-stat__hint {
-    font-size: 0.62rem;
+    font-size: 0.6rem;
   }
 
   .startup-btn--journal {
@@ -195,11 +191,11 @@
   }
 
   .startup-btn--journal .startup-btn__label {
-    font-size: 0.9rem;
+    font-size: 0.88rem;
   }
 
   .startup-btn__hint {
-    font-size: 0.68rem;
+    font-size: 0.66rem;
   }
 
   .header__change-text {
@@ -220,7 +216,7 @@
   }
 
   .card__title {
-    font-size: 1.05rem;
+    font-size: 1rem;
   }
 
   /* Tables */
@@ -231,23 +227,21 @@
   .data-table th,
   .data-table td {
     padding: 10px 14px;
-    font-size: 0.82rem;
+    font-size: 0.8rem;
   }
 
-  /* Journal tabs */
   .journal-tabs {
     flex-wrap: wrap;
   }
 
   .journal-tab {
-    font-size: 0.8rem;
-    padding: 10px 14px;
+    font-size: 0.78rem;
+    padding: 9px 14px;
   }
 
-  /* Journal actions */
   .journal-actions {
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
   }
 
   .journal-actions .btn {
@@ -255,7 +249,6 @@
     justify-content: center;
   }
 
-  /* Import box */
   .import-box__actions {
     flex-direction: column;
   }
@@ -269,41 +262,37 @@
     padding: 32px 16px;
   }
 
-  /* Login modal */
   .login-card {
     margin: 0 16px;
     padding: 32px 24px;
   }
 
   .login-card__title {
-    font-size: 1.2rem;
+    font-size: 1.15rem;
   }
 
-  /* Toast */
   .toast {
     left: 16px;
     right: 16px;
     bottom: 16px;
-    font-size: 0.85rem;
+    font-size: 0.82rem;
   }
 
-  /* Footer */
   .footer {
     padding: 16px 0;
   }
 
   .footer__text {
-    font-size: 0.8rem;
+    font-size: 0.78rem;
   }
 
-  /* Loading overlay */
   .loading-spinner {
-    width: 40px;
-    height: 40px;
+    width: 38px;
+    height: 38px;
   }
 
   .loading-text {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
   }
 }
 
@@ -312,7 +301,7 @@
   .header__inner {
     flex-direction: column;
     align-items: stretch;
-    gap: 10px;
+    gap: 8px;
   }
 
   .header__right,
@@ -326,11 +315,11 @@
   }
 
   .hero__title {
-    font-size: 1.55rem;
+    font-size: 1.45rem;
   }
 
   .hero__subtitle {
-    font-size: 0.88rem;
+    font-size: 0.85rem;
   }
 
   .hero {
@@ -338,21 +327,21 @@
   }
 
   .stats-card {
-    padding: 16px;
+    padding: 18px;
     gap: 14px;
   }
 
   .stats-card__icon {
-    width: 44px;
-    height: 44px;
+    width: 42px;
+    height: 42px;
   }
 
   .stats-card__value {
-    font-size: 1.35rem;
+    font-size: 1.3rem;
   }
 
   .stats-card__label {
-    font-size: 0.78rem;
+    font-size: 0.76rem;
   }
 
   .card__header {
@@ -364,32 +353,32 @@
   }
 
   .card__title {
-    font-size: 0.98rem;
+    font-size: 0.95rem;
   }
 
   .card__count {
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     padding: 3px 10px;
   }
 
   .badge {
-    font-size: 0.72rem;
-    padding: 6px 12px;
+    font-size: 0.7rem;
+    padding: 5px 12px;
   }
 
   .input {
-    padding: 12px 14px;
-    font-size: 0.9rem;
+    padding: 11px 13px;
+    font-size: 0.88rem;
   }
 
   .data-table th,
   .data-table td {
     padding: 8px 10px;
-    font-size: 0.75rem;
+    font-size: 0.74rem;
   }
 
   .login-card {
-    padding: 28px 20px;
+    padding: 26px 18px;
   }
 }
 
@@ -400,35 +389,34 @@
   }
 
   .hero__title {
-    font-size: 1.4rem;
+    font-size: 1.3rem;
   }
 
   .hero__subtitle {
-    font-size: 0.82rem;
+    font-size: 0.8rem;
   }
 
   .btn {
-    padding: 12px 18px;
-    font-size: 0.88rem;
-  }
-
-  .input {
-    padding: 11px 12px;
+    padding: 11px 16px;
     font-size: 0.85rem;
   }
 
+  .input {
+    padding: 10px 12px;
+    font-size: 0.84rem;
+  }
+
   .input--search {
-    font-size: 0.9rem;
-    padding: 12px 14px;
-    padding-right: 40px;
+    font-size: 0.88rem;
+    padding: 11px 14px 11px 14px;
   }
 
   .form__section-label {
-    font-size: 0.72rem;
+    font-size: 0.68rem;
   }
 
   .form__label {
-    font-size: 0.8rem;
+    font-size: 0.78rem;
   }
 
   .search-results__item {
@@ -439,11 +427,11 @@
   }
 
   .search-results__item-name {
-    font-size: 0.85rem;
+    font-size: 0.84rem;
   }
 
   .search-results__item-badge {
-    font-size: 0.7rem;
+    font-size: 0.66rem;
     padding: 3px 8px;
   }
 }
@@ -451,80 +439,80 @@
 /* === 375px (iPhone 6/7/8/SE 2nd gen) === */
 @media (max-width: 375px) {
   .hero__title {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
   }
 
   .hero__subtitle {
-    font-size: 0.78rem;
+    font-size: 0.76rem;
   }
 
   .card__title {
-    font-size: 0.92rem;
+    font-size: 0.9rem;
   }
 
   .stats-card {
-    padding: 14px;
+    padding: 16px;
     gap: 12px;
   }
 
   .stats-card__icon {
-    width: 40px;
-    height: 40px;
+    width: 38px;
+    height: 38px;
   }
 
   .stats-card__value {
-    font-size: 1.25rem;
+    font-size: 1.2rem;
   }
 
   .input {
-    padding: 10px 12px;
+    padding: 10px 11px;
   }
 
   .btn {
-    padding: 11px 16px;
-    font-size: 0.84rem;
+    padding: 10px 14px;
+    font-size: 0.82rem;
   }
 }
 
 /* === 320px (iPhone SE 1st gen) === */
 @media (max-width: 320px) {
   .container {
-    padding: 0 10px;
+    padding: 0 8px;
   }
 
   .hero__title {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
   }
 
   .hero__subtitle {
-    font-size: 0.75rem;
+    font-size: 0.72rem;
   }
 
   .hero {
-    padding: 12px 0 16px;
+    padding: 10px 0 14px;
   }
 
   .logo__icon {
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
   }
 
   .logo__brand {
-    font-size: 1.15rem;
+    font-size: 1.1rem;
   }
 
   .logo__sub {
-    font-size: 0.65rem;
-    letter-spacing: 1px;
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
   }
 
   .badge {
-    font-size: 0.68rem;
-    padding: 5px 10px;
+    font-size: 0.64rem;
+    padding: 4px 10px;
   }
 
   .nav-link {
-    font-size: 0.75rem;
+    font-size: 0.72rem;
   }
 
   .card__header {
@@ -537,11 +525,11 @@
   }
 
   .card__title {
-    font-size: 0.85rem;
+    font-size: 0.82rem;
   }
 
   .card__count {
-    font-size: 0.7rem;
+    font-size: 0.66rem;
     padding: 2px 8px;
   }
 
@@ -551,45 +539,44 @@
   }
 
   .stats-card__icon {
-    width: 36px;
-    height: 36px;
+    width: 34px;
+    height: 34px;
   }
 
   .stats-card__value {
-    font-size: 1.15rem;
+    font-size: 1.1rem;
   }
 
   .stats-card__label {
-    font-size: 0.7rem;
+    font-size: 0.68rem;
   }
 
   .input {
-    padding: 9px 10px;
-    font-size: 0.8rem;
-    border-radius: var(--radius-sm);
+    padding: 8px 10px;
+    font-size: 0.78rem;
+    border-radius: 8px;
   }
 
   .input--search {
-    font-size: 0.82rem;
-    padding: 10px 12px;
-    padding-right: 36px;
+    font-size: 0.8rem;
+    padding: 9px 11px;
   }
 
   .btn {
-    padding: 10px 14px;
-    font-size: 0.78rem;
-    border-radius: var(--radius-sm);
-    gap: 6px;
+    padding: 9px 12px;
+    font-size: 0.76rem;
+    border-radius: 8px;
+    gap: 5px;
   }
 
   .btn--save {
-    padding: 12px 16px;
-    font-size: 0.85rem;
+    padding: 11px 14px;
+    font-size: 0.82rem;
   }
 
   .mp-btn {
-    padding: 12px 16px;
-    font-size: 0.8rem;
+    padding: 12px 14px;
+    font-size: 0.78rem;
     gap: 8px;
   }
 
@@ -599,85 +586,85 @@
   }
 
   .form__section-label {
-    font-size: 0.68rem;
-    margin: 16px 0 12px;
+    font-size: 0.64rem;
+    margin: 14px 0 10px;
     padding-bottom: 6px;
   }
 
   .form__label {
-    font-size: 0.75rem;
+    font-size: 0.72rem;
   }
 
   .search-results__item {
     padding: 8px 10px;
     gap: 4px;
-    border-radius: var(--radius-sm);
+    border-radius: 8px;
   }
 
   .search-results__item-name {
-    font-size: 0.78rem;
+    font-size: 0.76rem;
   }
 
   .search-results__item-meta {
-    font-size: 0.7rem;
+    font-size: 0.68rem;
   }
 
   .search-results__item-badge {
-    font-size: 0.65rem;
+    font-size: 0.62rem;
     padding: 2px 6px;
   }
 
   .data-table th,
   .data-table td {
-    padding: 7px 8px;
-    font-size: 0.7rem;
+    padding: 6px 6px;
+    font-size: 0.66rem;
   }
 
   .journal-tab {
-    font-size: 0.7rem;
-    padding: 8px 10px;
+    font-size: 0.68rem;
+    padding: 7px 8px;
   }
 
   .journal-actions {
-    gap: 8px;
+    gap: 6px;
   }
 
   .login-card {
-    padding: 24px 16px;
+    padding: 22px 14px;
     border-radius: var(--radius);
   }
 
   .login-card__title {
-    font-size: 1.1rem;
+    font-size: 1rem;
   }
 
   .login-card__subtitle {
-    font-size: 0.78rem;
+    font-size: 0.74rem;
   }
 
   .login-card__error {
-    font-size: 0.75rem;
+    font-size: 0.72rem;
   }
 
   .toast {
-    left: 10px;
-    right: 10px;
-    bottom: 10px;
-    padding: 10px 16px;
-    font-size: 0.78rem;
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+    padding: 10px 14px;
+    font-size: 0.74rem;
   }
 
   .footer__text {
-    font-size: 0.7rem;
+    font-size: 0.68rem;
   }
 
   .data-table__empty {
-    padding: 32px 10px !important;
-    font-size: 0.8rem !important;
+    padding: 28px 8px !important;
+    font-size: 0.76rem !important;
   }
 
   .search-results {
-    max-height: 240px;
+    max-height: 220px;
   }
 
   .search-input-icon {
@@ -686,10 +673,10 @@
     height: 16px;
   }
 
-  /* === Suggested Complaints === */
+  /* Suggested Complaints */
   .suggested-complaints {
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
   }
 
   .sc-category {
@@ -698,12 +685,12 @@
   }
 
   .sc-category__title {
-    font-size: 0.72rem;
+    font-size: 0.7rem;
     margin-bottom: 6px;
   }
 
   .sc-check__text {
-    font-size: 0.7rem;
+    font-size: 0.68rem;
   }
 
   .sc-check {
@@ -717,7 +704,7 @@
   }
 
   .input--other {
-    font-size: 0.72rem !important;
+    font-size: 0.7rem !important;
     padding: 6px 8px !important;
   }
 }
@@ -736,11 +723,11 @@
 
   .scs-col--black {
     border-left: none;
-    border-top: 1px solid rgba(225, 232, 237, 0.6);
+    border-top: 1px solid rgba(229, 231, 235, 0.5);
   }
 
   .scs-col__header {
-    font-size: 0.62rem;
+    font-size: 0.6rem;
     padding: 6px 10px;
   }
 
@@ -750,22 +737,22 @@
   }
 
   .scs-table {
-    font-size: 0.68rem;
+    font-size: 0.66rem;
   }
 
   .scs-table__num {
     width: 14px;
     padding: 2px 1px 2px 2px;
-    font-size: 0.58rem;
+    font-size: 0.56rem;
   }
 
   .scs-table__icon {
     width: 16px;
-    font-size: 0.68rem;
+    font-size: 0.66rem;
   }
 
   .scs-table__name {
-    font-size: 0.68rem;
+    font-size: 0.66rem;
     padding: 2px 2px;
     white-space: normal;
     word-break: break-word;
@@ -778,7 +765,7 @@
 
   .scs-table__cnt {
     width: 16px;
-    font-size: 0.65rem;
+    font-size: 0.62rem;
     padding: 2px 4px 2px 2px;
   }
 
@@ -788,40 +775,39 @@
   }
 
   .scs-header__title {
-    font-size: 0.7rem;
+    font-size: 0.66rem;
   }
 
   .scs-toggle-btn {
     padding: 3px 8px;
-    font-size: 0.65rem;
+    font-size: 0.62rem;
   }
 
-  /* Complaint stats journal tables */
   .cs-table {
     min-width: auto;
     width: 100%;
-    font-size: 0.72rem;
+    font-size: 0.7rem;
   }
 
   .cs-table__cat {
     padding: 6px 10px;
-    font-size: 0.68rem;
+    font-size: 0.66rem;
   }
 
   .cs-table__num {
-    width: 22px;
+    width: 20px;
     padding: 4px 2px 4px 6px;
-    font-size: 0.6rem;
+    font-size: 0.58rem;
   }
 
   .cs-table__icon {
     width: 16px;
-    font-size: 0.7rem;
+    font-size: 0.68rem;
   }
 
   .cs-table__name {
     padding: 4px 4px;
-    font-size: 0.68rem;
+    font-size: 0.66rem;
   }
 
   .cs-table__bar-cell {
@@ -834,39 +820,37 @@
   }
 
   .cs-table__count {
-    width: 22px;
+    width: 20px;
     padding: 4px 6px 4px 2px;
-    font-size: 0.7rem;
+    font-size: 0.68rem;
   }
 
   .complaint-stats {
     gap: 8px;
   }
 
-  /* Admin delete button */
   .btn-delete-record {
-    width: 28px;
-    height: 28px;
-    font-size: 0.85rem;
+    width: 26px;
+    height: 26px;
+    font-size: 0.8rem;
   }
 
   .data-table__actions-th {
-    width: 28px;
+    width: 26px;
   }
 
   .data-table__actions {
     padding: 2px !important;
   }
 
-  /* Header */
   .badge {
-    font-size: 0.7rem;
-    padding: 5px 10px;
+    font-size: 0.66rem;
+    padding: 4px 10px;
   }
 
   .header__change-btn {
     padding: 4px 8px;
-    font-size: 0.7rem;
+    font-size: 0.68rem;
   }
 
   .header__change-text {
@@ -874,51 +858,46 @@
   }
 
   .nav-link {
-    font-size: 0.75rem;
+    font-size: 0.72rem;
   }
 
-  /* Form labels */
   .form__label {
-    font-size: 0.78rem;
+    font-size: 0.74rem;
   }
 
-  /* Toast smaller */
   .toast {
-    left: 8px;
-    right: 8px;
-    bottom: 8px;
+    left: 6px;
+    right: 6px;
+    bottom: 6px;
     padding: 10px 14px;
-    font-size: 0.76rem;
+    font-size: 0.72rem;
   }
 
-  /* Card count */
   .card__count {
-    font-size: 0.68rem;
-    padding: 2px 8px;
+    font-size: 0.64rem;
+    padding: 2px 6px;
   }
 
-  /* Data table on small phone */
   .data-table th,
   .data-table td {
-    padding: 6px 6px;
-    font-size: 0.68rem;
+    padding: 5px 5px;
+    font-size: 0.64rem;
   }
 
   .data-table__empty {
-    padding: 24px 8px !important;
-    font-size: 0.74rem !important;
+    padding: 22px 8px !important;
+    font-size: 0.7rem !important;
   }
 
   .data-table__mp-badge,
   .data-table__badge {
-    font-size: 0.65rem;
+    font-size: 0.6rem;
     padding: 2px 6px;
   }
 
-  /* Journal tabs */
   .journal-tab {
-    font-size: 0.68rem;
-    padding: 7px 8px;
+    font-size: 0.64rem;
+    padding: 6px 7px;
   }
 
   .journal-tabs {
