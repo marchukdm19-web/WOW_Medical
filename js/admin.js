@@ -243,36 +243,102 @@ function exportJournalToExcel() {
   });
 
   function buildSheet(records, stationLabel) {
-    // Build rows: title, date, empty, headers, data
+    const headerStyle = {
+      font: { bold: true, sz: 10, color: { rgb: 'FFFFFF' } },
+      fill: { fgColor: { rgb: '27AE60' } },
+      alignment: { horizontal: 'center', vertical: 'center', wrapText: true },
+      border: {
+        top: { style: 'thin', color: { rgb: '1E8449' } },
+        bottom: { style: 'thin', color: { rgb: '1E8449' } },
+        left: { style: 'thin', color: { rgb: '1E8449' } },
+        right: { style: 'thin', color: { rgb: '1E8449' } }
+      }
+    };
+    const titleStyle = {
+      font: { bold: true, sz: 14, color: { rgb: '1E8449' } },
+      fill: { fgColor: { rgb: 'E8F8F0' } },
+      alignment: { horizontal: 'center', vertical: 'center' }
+    };
+    const dateStyle = {
+      font: { sz: 9, color: { rgb: '7F8C8D' } },
+      alignment: { horizontal: 'center', vertical: 'center' }
+    };
+    const cellStyle = {
+      font: { sz: 10 },
+      alignment: { vertical: 'center', wrapText: true },
+      border: {
+        bottom: { style: 'hair', color: { rgb: 'E1E8ED' } }
+      }
+    };
+    const feverStyle = {
+      font: { sz: 10, color: { rgb: 'E74C3C' }, bold: true },
+      alignment: { vertical: 'center' },
+      border: { bottom: { style: 'hair', color: { rgb: 'E1E8ED' } } }
+    };
+    const yesStyle = {
+      font: { sz: 10, color: { rgb: '27AE60' }, bold: true },
+      alignment: { horizontal: 'center', vertical: 'center' },
+      border: { bottom: { style: 'hair', color: { rgb: 'E1E8ED' } } }
+    };
+    const noStyle = {
+      font: { sz: 10, color: { rgb: 'BDC3C7' } },
+      alignment: { horizontal: 'center', vertical: 'center' },
+      border: { bottom: { style: 'hair', color: { rgb: 'E1E8ED' } } }
+    };
+    const greenBand = {
+      font: { sz: 10 },
+      fill: { fgColor: { rgb: 'F0FBF4' } },
+      alignment: { vertical: 'center', wrapText: true },
+      border: { bottom: { style: 'hair', color: { rgb: 'E1E8ED' } } }
+    };
+    const headerRow = headers.map((h) => ({ v: h, s: headerStyle }));
+
     const rows = [];
-    rows.push([`WOW Medical — Журнал медичних оглядів (${stationLabel} медпункт)`]);
-    rows.push([`Дата вивантаження: ${dateStr}  |  Кількість записів: ${records.length}`]);
-    rows.push([]);
-    rows.push(headers);
+    // Title row
+    rows.push([{ v: `WOW Medical — Журнал медичних оглядів (${stationLabel} медпункт)`, s: titleStyle },
+               ...headers.slice(1).map(() => ({ v: '', s: titleStyle }))]);
+    // Date row
+    rows.push([{ v: `Дата вивантаження: ${dateStr}  |  Кількість записів: ${records.length}`, s: dateStyle },
+               ...headers.slice(1).map(() => ({ v: '', s: dateStyle }))]);
+    // Empty row
+    rows.push(headers.map(() => ({ v: '', s: {} })));
+    // Header row
+    rows.push(headerRow);
 
     records.forEach((exam, i) => {
-      rows.push([
-        i + 1,
-        exam.timestamp || '',
-        stationLabel,
-        exam.childName || '',
-        exam.temperature || '',
-        exam.complaints || '',
-        exam.actionsDone || '',
-        exam.prescriptions || '',
-        exam.doctorName || '',
-        exam.parentsNotified ? 'Так' : 'Ні'
-      ]);
+      const isFever = parseFloat(exam.temperature) >= 37;
+      const tempStyle = isFever ? feverStyle : { ...cellStyle, alignment: { horizontal: 'center', vertical: 'center' } };
+      const bandStyle = (i % 2 === 0) ? cellStyle : greenBand;
+
+      const row = [];
+      row.push({ v: i + 1, s: { ...cellStyle, alignment: { horizontal: 'center', vertical: 'center' } } });
+      row.push({ v: exam.timestamp || '', s: cellStyle });
+      row.push({ v: stationLabel, s: { ...cellStyle, alignment: { horizontal: 'center', vertical: 'center' } } });
+      row.push({ v: exam.childName || '', s: { ...cellStyle, font: { sz: 10, bold: true } } });
+      row.push({ v: exam.temperature || '', s: tempStyle });
+      row.push({ v: exam.complaints || '', s: bandStyle });
+      row.push({ v: exam.actionsDone || '', s: bandStyle });
+      row.push({ v: exam.prescriptions || '', s: bandStyle });
+      row.push({ v: exam.doctorName || '', s: cellStyle });
+      row.push({ v: exam.parentsNotified ? 'Так' : 'Ні', s: exam.parentsNotified ? yesStyle : noStyle });
+
+      rows.push(row);
     });
 
     const ws = XLSX.utils.aoa_to_sheet(rows);
     ws['!cols'] = colWidths;
 
-    // Merge title row across all columns
-    ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: headers.length - 1 } }, { s: { r: 1, c: 0 }, e: { r: 1, c: headers.length - 1 } }];
+    // Merge title and date rows
+    ws['!merges'] = [
+      { s: { r: 0, c: 0 }, e: { r: 0, c: headers.length - 1 } },
+      { s: { r: 1, c: 0 }, e: { r: 1, c: headers.length - 1 } }
+    ];
 
-    // Auto-filter on header row (row index 3 = 4th row)
+    // Auto-filter on header row
     ws['!autofilter'] = { ref: XLSX.utils.encode_range({ s: { r: 3, c: 0 }, e: { r: 3 + records.length, c: headers.length - 1 } }) };
+
+    // Row heights
+    ws['!rows'] = [{ hpx: 30 }, { hpx: 20 }, { hpx: 8 }, { hpx: 22 }];
 
     return ws;
   }
