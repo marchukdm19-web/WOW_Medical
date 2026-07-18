@@ -862,6 +862,41 @@ body {
   letter-spacing: 0.5px;
 }
 
+.scs-download-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid rgba(225, 232, 237, 0.6);
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all var(--transition);
+  opacity: 0.6;
+  flex-shrink: 0;
+}
+
+.scs-download-btn:hover {
+  opacity: 1;
+  background: #fff;
+  border-color: var(--color-primary-light);
+  transform: scale(1.08);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.scs-download-btn:active {
+  transform: scale(0.95);
+}
+
+.scs-download-btn:disabled {
+  opacity: 0.3;
+  cursor: wait;
+  transform: none;
+}
+
 .scs-header__toggle {
   margin-left: auto;
   display: flex;

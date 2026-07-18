@@ -199,6 +199,32 @@ function init() {
     applyFilter(tab.dataset.mp);
   });
 
+  // Download complaint stats as image
+  const journalScsDownloadBtn = document.getElementById('journalScsDownloadBtn');
+  if (journalScsDownloadBtn) {
+    journalScsDownloadBtn.addEventListener('click', async () => {
+      const el = document.getElementById('complaintStatsSection');
+      if (!el || typeof html2canvas === 'undefined') {
+        alert('Не вдалося завантажити: html2canvas не знайдено');
+        return;
+      }
+      journalScsDownloadBtn.disabled = true;
+      try {
+        const canvas = await html2canvas(el, { backgroundColor: '#ffffff', scale: 2, useCORS: true });
+        const link = document.createElement('a');
+        const now = new Date();
+        const dateStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+        link.download = `WOW_Medical_скарги_${dateStr}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      } catch (err) {
+        console.error('html2canvas error:', err);
+        alert('Помилка створення зображення');
+      }
+      journalScsDownloadBtn.disabled = false;
+    });
+  }
+
   loadJournal();
 }
 

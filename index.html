@@ -92,6 +92,7 @@
         <div class="scs-header">
           <span class="scs-header__icon">📊</span>
           <span class="scs-header__title">Статистика скарг</span>
+          <button type="button" class="scs-download-btn" id="scsDownloadBtn" title="Завантажити як зображення">📸</button>
           <div class="scs-header__toggle" id="scsToggle">
             <button type="button" class="scs-toggle-btn scs-toggle-btn--active" data-day="today">Сьогодні</button>
             <button type="button" class="scs-toggle-btn" data-day="yesterday">Вчора</button>
@@ -442,5 +443,6 @@
 
   </div><!-- /#mainApp -->
 
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <script type="module" src="js/app.js?v=5"></script>
 </html>

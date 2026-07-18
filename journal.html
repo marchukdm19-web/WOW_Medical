@@ -59,6 +59,7 @@
               <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
             </svg>
             <h2 class="card__title">Статистика скарг за сьогодні</h2>
+            <button type="button" class="scs-download-btn" id="journalScsDownloadBtn" title="Завантажити як зображення">📸</button>
             <span class="card__count" id="complaintStatsTotal">0</span>
           </div>
           <div class="card__body">
@@ -127,6 +128,7 @@
     </div>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <script type="module" src="js/journal.js?v=2"></script>
 </body>
 </html>

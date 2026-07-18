@@ -663,6 +663,32 @@ async function init() {
     });
   }
 
+  // Завантажити статистику скарг як зображення
+  const scsDownloadBtn = document.getElementById('scsDownloadBtn');
+  if (scsDownloadBtn) {
+    scsDownloadBtn.addEventListener('click', async () => {
+      const el = document.getElementById('startupComplaintStats');
+      if (!el || typeof html2canvas === 'undefined') {
+        showToast('Не вдалося завантажити: html2canvas не знайдено', 'error');
+        return;
+      }
+      scsDownloadBtn.disabled = true;
+      try {
+        const canvas = await html2canvas(el, { backgroundColor: '#ffffff', scale: 2, useCORS: true });
+        const link = document.createElement('a');
+        const label = startupComplaintsDay === 'yesterday' ? 'вчора' : 'сьогодні';
+        link.download = `WOW_Medical_скарги_${label}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        showToast('📸 Статистику збережено як зображення', 'success');
+      } catch (err) {
+        console.error('html2canvas error:', err);
+        showToast('Помилка створення зображення', 'error');
+      }
+      scsDownloadBtn.disabled = false;
+    });
+  }
+
   // Тогл статистики скарг (сьогодні / вчора)
   const scsToggle = document.getElementById('scsToggle');
   if (scsToggle) {
