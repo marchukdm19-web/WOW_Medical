@@ -377,7 +377,7 @@ function showToast(message, type) {
   toastTimer = setTimeout(() => {
     toast.classList.remove('toast--visible');
     setTimeout(() => toast.remove(), 300);
-  }, 3500);
+  }, 1000);
 }
 
 /* ========================================
