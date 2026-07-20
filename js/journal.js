@@ -24,8 +24,8 @@ let allRecords = [];
 let currentFilter = 'all';
 
 const mpLabel = {
-  white: 'Білий',
-  black: 'Чорний'
+  white: 'WHITE',
+  black: 'BLACK'
 };
 
 const mpBadgeClass = {
@@ -88,7 +88,7 @@ function applyFilter(filter) {
       <td class="data-table__cell--wrap">${escapeHTML(exam.actionsDone || '—')}</td>
       <td class="data-table__cell--wrap">${escapeHTML(exam.prescriptions || '—')}</td>
       <td>${escapeHTML(exam.doctorName || '—')}</td>
-      <td><span class="data-table__mp-badge ${mpBadgeClass[mp] || 'data-table__mp-badge--white'}">${mpLabel[mp] || 'Білий'}</span></td>
+      <td><span class="data-table__mp-badge ${mpBadgeClass[mp] || 'data-table__mp-badge--white'}">${mpLabel[mp] || 'WHITE'}</span></td>
       <td>${exam.parentsNotified ? '<span class="data-table__badge data-table__badge--yes">Так</span>' : '<span class="data-table__badge data-table__badge--no">Ні</span>'}</td>
     </tr>`;
   }).join('');

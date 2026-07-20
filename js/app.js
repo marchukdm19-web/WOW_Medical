@@ -195,7 +195,7 @@ async function showChildHistory(fullName) {
     historySection.style.display = 'block';
 
     historyBody.innerHTML = childHistory.map((exam) => {
-      const mpLabel = exam.medicalStation === 'black' ? 'Чорний' : 'Білий';
+      const mpLabel = exam.medicalStation === 'black' ? 'BLACK' : 'WHITE';
       const mpClass = exam.medicalStation === 'black' ? 'data-table__mp-badge--black' : 'data-table__mp-badge--white';
       return `<tr>
         <td>${escapeHTML(exam.timestamp || '—')}</td>
@@ -491,12 +491,12 @@ async function loadStartupStats() {
       return !isNaN(temp) && temp >= 37;
     }).length;
 
-    // Білий медпункт
+    // Медпункт WHITE
     const whiteToday = todayRecords.filter((r) => (r.medicalStation || 'white') === 'white').length;
     const whiteAll = allRecords.filter((r) => (r.medicalStation || 'white') === 'white');
     const whiteLast = whiteAll.length > 0 ? whiteAll[whiteAll.length - 1] : null;
 
-    // Чорний медпункт
+    // Медпункт BLACK
     const blackToday = todayRecords.filter((r) => r.medicalStation === 'black').length;
     const blackAll = allRecords.filter((r) => r.medicalStation === 'black');
     const blackLast = blackAll.length > 0 ? blackAll[blackAll.length - 1] : null;

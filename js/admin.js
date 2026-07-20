@@ -208,7 +208,7 @@ function renderJournal() {
   }
 
   journalBody.innerHTML = filtered.map((exam, i) => {
-    const msLabel = exam.medicalStation === 'black' ? 'Чорний' : 'Білий';
+    const msLabel = exam.medicalStation === 'black' ? 'BLACK' : 'WHITE';
     const msClass = exam.medicalStation === 'black' ? 'data-table__mp-badge--black' : 'data-table__mp-badge--white';
     return `<tr data-record-id="${esc(exam.id || '')}">
       <td>${i + 1}</td>
@@ -295,7 +295,7 @@ function exportJournalToExcel() {
 
     const rows = [];
     // Title row
-    rows.push([{ v: `WOW Medical — Журнал медичних оглядів (${stationLabel} медпункт)`, s: titleStyle },
+    rows.push([{ v: `WOW Medical — Журнал медичних оглядів (Медпункт ${stationLabel})`, s: titleStyle },
                ...headers.slice(1).map(() => ({ v: '', s: titleStyle }))]);
     // Date row
     rows.push([{ v: `Дата вивантаження: ${dateStr}  |  Кількість записів: ${records.length}`, s: dateStyle },
@@ -347,8 +347,8 @@ function exportJournalToExcel() {
   const blackRecords = sorted.filter((e) => e.medicalStation === 'black');
 
   const wb = XLSX.utils.book_new();
-  if (whiteRecords.length > 0) XLSX.utils.book_append_sheet(wb, buildSheet(whiteRecords, 'Білий'), 'Білий медпункт');
-  if (blackRecords.length > 0) XLSX.utils.book_append_sheet(wb, buildSheet(blackRecords, 'Чорний'), 'Чорний медпункт');
+  if (whiteRecords.length > 0) XLSX.utils.book_append_sheet(wb, buildSheet(whiteRecords, 'WHITE'), 'Медпункт WHITE');
+  if (blackRecords.length > 0) XLSX.utils.book_append_sheet(wb, buildSheet(blackRecords, 'BLACK'), 'Медпункт BLACK');
 
   const fileName = `WOW_Medical_Журнал_${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}.xlsx`;
   XLSX.writeFile(wb, fileName);
