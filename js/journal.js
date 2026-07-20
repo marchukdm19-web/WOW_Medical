@@ -1,10 +1,11 @@
 /* ============================================
    WOW Medical — Journal (тільки читання)
    Лікарі: перегляд журналу звернень
-   Без видалення, очищення, імпорту
+   + Пошук по дитині з історією
    ============================================ */
 
 import { getExaminations } from './api.js';
+import { loadChildren } from './database.js';
 
 /* ========================================
    DOM
@@ -16,12 +17,24 @@ const journalCount = document.getElementById('journalCount');
 const complaintStatsBody = document.getElementById('complaintStatsBody');
 const complaintStatsTotal = document.getElementById('complaintStatsTotal');
 
+// Search DOM
+const journalSearchInput = document.getElementById('journalSearchInput');
+const journalSearchBtn = document.getElementById('journalSearchBtn');
+const journalSearchClear = document.getElementById('journalSearchClear');
+const journalSearchResults = document.getElementById('journalSearchResults');
+const journalSearchActive = document.getElementById('journalSearchActive');
+const journalSearchActiveName = document.getElementById('journalSearchActiveName');
+const journalSearchTotal = document.getElementById('journalSearchTotal');
+
 /* ========================================
    Стан
    ======================================== */
 
 let allRecords = [];
 let currentFilter = 'all';
+let childrenData = [];
+let selectedChildName = null;
+let searchDebounceTimer = null;
 
 const mpLabel = {
   white: 'WHITE',
@@ -40,7 +53,6 @@ const mpBadgeClass = {
 async function loadJournal() {
   try {
     allRecords = await getExaminations();
-    // Сортуємо хронологічно: найстаріші записи перші, найновіші — останні
     allRecords.sort((a, b) => {
       const timeA = a.createdAt && a.createdAt.toDate ? a.createdAt.toDate().getTime() : 0;
       const timeB = b.createdAt && b.createdAt.toDate ? b.createdAt.toDate().getTime() : 0;
@@ -51,9 +63,117 @@ async function loadJournal() {
     console.error('[Journal] Помилка завантаження:', error);
     allRecords = [];
   }
+
+  // Завантажуємо список дітей для пошуку
+  try {
+    childrenData = await loadChildren();
+    journalSearchTotal.textContent = childrenData.length;
+    console.log(`[Journal] Завантажено ${childrenData.length} дітей для пошуку`);
+  } catch (error) {
+    console.error('[Journal] Помилка завантаження дітей:', error);
+    childrenData = [];
+  }
+
   applyFilter(currentFilter);
   buildComplaintStats(allRecords);
 }
+
+/* ========================================
+   Пошук дитини
+   ======================================== */
+
+function normalize(str) {
+  return str.toLowerCase().replace(/[''`]/g, "'").replace(/['']/g, "'").replace(/[«»]/g, '"').trim();
+}
+
+function escapeHTML(str) {
+  const div = document.createElement('div');
+  div.appendChild(document.createTextNode(str));
+  return div.innerHTML;
+}
+
+function escapeRegex(str) { return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+
+function searchChildren(query) {
+  const q = normalize(query).trim();
+  if (q.length < 2) { journalSearchResults.innerHTML = ''; journalSearchResults.classList.remove('search-results--visible'); return; }
+
+  const tokens = q.split(/\s+/).filter(Boolean);
+  const results = childrenData.filter((child) => {
+    const haystack = normalize(`${child.fullName} ${child.teamLeader || ''}`);
+    return tokens.every((token) => haystack.includes(token));
+  });
+  renderSearchResults(results, q);
+}
+
+function highlightMatch(text, query) {
+  if (!text) return '—';
+  const tokens = normalize(query).split(/\s+/).filter(Boolean);
+  if (tokens.length === 0) return escapeHTML(text);
+  return escapeHTML(text).replace(
+    new RegExp(`(${tokens.map((t) => escapeRegex(escapeHTML(t))).join('|')})`, 'gi'),
+    '<span class="search-results__highlight">$1</span>'
+  );
+}
+
+function renderSearchResults(results, query) {
+  journalSearchResults.innerHTML = '';
+  if (results.length === 0) {
+    journalSearchResults.innerHTML = '<div class="search-results__empty">😕 Нікого не знайдено.</div>';
+    journalSearchResults.classList.add('search-results--visible');
+    return;
+  }
+
+  const ul = document.createElement('ul');
+  ul.className = 'search-results__list';
+
+  results.forEach((child) => {
+    const li = document.createElement('li');
+    li.className = 'search-results__item';
+    li.innerHTML = `
+      <div class="search-results__item-info">
+        <span class="search-results__item-name">${highlightMatch(child.fullName, query)}</span>
+        <span class="search-results__item-meta">${escapeHTML(child.age || '—')} р. · Тім-лідер: ${escapeHTML(child.teamLeader || '—')}</span>
+      </div>
+      <span class="search-results__item-badge">${escapeHTML(child.age || '—')} р.</span>`;
+    li.addEventListener('click', () => selectChild(child));
+    ul.appendChild(li);
+  });
+
+  journalSearchResults.appendChild(ul);
+  journalSearchResults.classList.add('search-results--visible');
+}
+
+function clearSearchResults() {
+  journalSearchResults.innerHTML = '';
+  journalSearchResults.classList.remove('search-results--visible');
+}
+
+function selectChild(child) {
+  selectedChildName = child.fullName;
+  journalSearchInput.value = child.fullName;
+  clearSearchResults();
+
+  // Показати активний фільтр
+  journalSearchActive.style.display = 'flex';
+  journalSearchActiveName.textContent = `🔍 Історія звернень: ${escapeHTML(child.fullName)}`;
+  journalSearchClear.style.display = 'inline-flex';
+
+  applyFilter(currentFilter);
+}
+
+function clearChildFilter() {
+  selectedChildName = null;
+  journalSearchInput.value = '';
+  journalSearchActive.style.display = 'none';
+  journalSearchClear.style.display = 'none';
+  clearSearchResults();
+  applyFilter(currentFilter);
+}
+
+/* ========================================
+   Фільтрація журналу
+   ======================================== */
 
 function applyFilter(filter) {
   currentFilter = filter;
@@ -64,15 +184,23 @@ function applyFilter(filter) {
     tab.classList.toggle('journal-tab--active', tab.dataset.mp === filter);
   });
 
-  const filtered = filter === 'all'
-    ? allRecords
+  let filtered = filter === 'all'
+    ? [...allRecords]
     : allRecords.filter((r) => (r.medicalStation || 'white') === filter);
+
+  // Фільтруємо за обраною дитиною
+  if (selectedChildName) {
+    filtered = filtered.filter((r) =>
+      r.childName && normalize(r.childName) === normalize(selectedChildName)
+    );
+  }
 
   journalCount.textContent = `${filtered.length} записів`;
 
   if (filtered.length === 0) {
+    const msg = selectedChildName ? `Немає звернень для «${selectedChildName}»` : 'Немає записів';
     journalBody.innerHTML = `<tr>
-      <td colspan="10" class="data-table__empty">Немає записів</td>
+      <td colspan="10" class="data-table__empty">${msg}</td>
     </tr>`;
     return;
   }
@@ -93,6 +221,10 @@ function applyFilter(filter) {
     </tr>`;
   }).join('');
 }
+
+/* ========================================
+   Статистика скарг
+   ======================================== */
 
 function getTodayDateString() {
   const now = new Date();
@@ -119,7 +251,6 @@ function buildComplaintStats(records) {
     });
   });
 
-  // Convert Sets to unique counts per complaint
   const complaintUnique = {};
   for (const [key, set] of Object.entries(complaintCount)) {
     complaintUnique[key] = set.size;
@@ -137,7 +268,6 @@ function buildComplaintStats(records) {
     return;
   }
 
-  // Icons for each complaint
   const complaintIcons = {
     'Головний біль': '🤕', 'Підвищена температура': '🌡️', 'Слабкість': '😴', 'Запаморочення': '💫',
     'Біль у горлі': '🗣️', 'Нежить': '🤧', 'Кашель': '😮‍💨', 'Закладеність носа': '👃',
@@ -190,10 +320,13 @@ function buildComplaintStats(records) {
   complaintStatsBody.innerHTML = html;
 }
 
-function escapeHTML(str) {
-  const div = document.createElement('div');
-  div.appendChild(document.createTextNode(str));
-  return div.innerHTML;
+/* ========================================
+   Debounce для пошуку
+   ======================================== */
+
+function debounceSearch() {
+  clearTimeout(searchDebounceTimer);
+  searchDebounceTimer = setTimeout(() => searchChildren(journalSearchInput.value), 300);
 }
 
 /* ========================================
@@ -201,11 +334,27 @@ function escapeHTML(str) {
    ======================================== */
 
 function init() {
+  // Таби медпунктів
   journalTabs.addEventListener('click', (e) => {
     const tab = e.target.closest('.journal-tab');
     if (!tab) return;
     applyFilter(tab.dataset.mp);
   });
+
+  // Пошук дитини
+  journalSearchInput.addEventListener('input', debounceSearch);
+  journalSearchBtn.addEventListener('click', () => searchChildren(journalSearchInput.value));
+  journalSearchInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); searchChildren(journalSearchInput.value); }
+  });
+
+  // Закриття результатів пошуку при кліку поза ними
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.search-section')) clearSearchResults();
+  });
+
+  // Кнопка скидання фільтру дитини
+  journalSearchClear.addEventListener('click', clearChildFilter);
 
   // Download complaint stats as image
   const journalScsDownloadBtn = document.getElementById('journalScsDownloadBtn');
@@ -221,7 +370,7 @@ function init() {
         const canvas = await html2canvas(el, { backgroundColor: '#ffffff', scale: 2, useCORS: true });
         const link = document.createElement('a');
         const now = new Date();
-        const dateStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+        const dateStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
         link.download = `WOW_Medical_скарги_${dateStr}.png`;
         link.href = canvas.toDataURL('image/png');
         link.click();

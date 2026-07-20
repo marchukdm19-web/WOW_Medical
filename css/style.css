@@ -635,4 +635,21 @@ body {
 .cs-item__fill { height: 100%; background: var(--color-primary); border-radius: 4px; transition: width 0.5s ease; min-width: 4px; }
 .cs-item__count { font-size: 0.76rem; font-weight: 700; color: var(--color-primary); min-width: 24px; text-align: right; }
 
+/* === Journal Search Active Badge === */
+.journal-search-active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 12px;
+  padding: 12px 18px;
+  background: var(--color-primary-bg);
+  border: 1px solid rgba(0, 168, 107, 0.15);
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-primary-dark);
+  letter-spacing: 0.01em;
+}
+
 @media (max-width: 420px) { .scs-table__bar-cell { display: none; } }

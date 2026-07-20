@@ -55,6 +55,51 @@
         </div>
       </section>
 
+      <!-- Пошук дитини в журналі -->
+      <section class="search-section">
+        <div class="card card--search">
+          <div class="card__header">
+            <svg class="card__header-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/>
+              <path d="M21 21l-4.35-4.35"/>
+            </svg>
+            <h2 class="card__title">Пошук дитини</h2>
+            <span class="card__count" id="journalSearchTotal">0</span>
+          </div>
+          <div class="card__body">
+            <div class="search-box">
+              <div class="search-input-wrapper">
+                <input
+                  type="text"
+                  id="journalSearchInput"
+                  class="input input--search"
+                  placeholder="Введіть ім'я або прізвище дитини..."
+                  autocomplete="off"
+                >
+                <svg class="search-input-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"/>
+                  <path d="M21 21l-4.35-4.35"/>
+                </svg>
+              </div>
+              <button id="journalSearchBtn" class="btn btn--primary btn--search">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"/>
+                  <path d="M21 21l-4.35-4.35"/>
+                </svg>
+                Знайти
+              </button>
+              <button id="journalSearchClear" class="btn btn--outline btn--search" style="display:none;">
+                ✕ Скинути
+              </button>
+            </div>
+            <div id="journalSearchResults" class="search-results"></div>
+            <div id="journalSearchActive" class="journal-search-active" style="display:none;">
+              <span id="journalSearchActiveName"></span>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- Журнал оглядів (тільки читання) -->
       <section class="table-section">
         <div class="card">
