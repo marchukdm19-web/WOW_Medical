@@ -16,6 +16,7 @@ let childrenData = [];
 let selectedChild = null;
 let searchDebounceTimer = null;
 let selectedMedicalPoint = 'white';
+let isSubmitting = false;
 
 // Стартовий екран
 const startupScreen = document.getElementById('startupScreen');
@@ -290,15 +291,40 @@ function validateForm(data) {
 
 async function handleSubmit(event) {
   event.preventDefault();
-  const data = collectFormData();
-  if (!validateForm(data)) return;
 
-  const result = await saveVisit(data);
-  if (result.success) {
-    showToast('✅ Дані збережено у Firebase!', 'success');
-    resetForm();
-  } else {
-    showToast(result.message, 'error');
+  if (isSubmitting) return;
+  isSubmitting = true;
+
+  const submitBtn = form.querySelector('.btn--save');
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Збереження...';
+  }
+
+  try {
+    const data = collectFormData();
+    if (!validateForm(data)) {
+      isSubmitting = false;
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Зберегти`;
+      }
+      return;
+    }
+
+    const result = await saveVisit(data);
+    if (result.success) {
+      showToast('✅ Дані збережено у Firebase!', 'success');
+      resetForm();
+    } else {
+      showToast(result.message, 'error');
+    }
+  } finally {
+    isSubmitting = false;
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Зберегти`;
+    }
   }
 }
 
